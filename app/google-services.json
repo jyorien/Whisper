@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "74503076726",
+    "firebase_url": "https://whisper-abb0c.firebaseio.com",
+    "project_id": "whisper-abb0c",
+    "storage_bucket": "whisper-abb0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74503076726:android:13ffa4a1ed3db2ac871857",
+        "android_client_info": {
+          "package_name": "sg.edu.tp.whisper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74503076726-9vradh7lab4ortjqum9jdcoe8bd1j7mo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sg.edu.tp.whisper",
+            "certificate_hash": "208dddc5f29c25b639e5d600a61ce5f87d599f02"
+          }
+        },
+        {
+          "client_id": "74503076726-r9bsecsnlqqtliglsr05e7apjh7fr27m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHydHpjrSXQ6HvWMbAKC9q9RtpbRaYYDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74503076726-r9bsecsnlqqtliglsr05e7apjh7fr27m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
