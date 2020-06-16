@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#40241a">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Top Tracks"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_margin="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/topTracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Top Artistes"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_margin="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/topArtistes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottom_nav"
+        app:itemBackground="@color/colorPrimary"
+        app:itemTextColor="@drawable/selector"
+        app:itemIconTint="@drawable/selector"
+        app:menu="@menu/menu_nav"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

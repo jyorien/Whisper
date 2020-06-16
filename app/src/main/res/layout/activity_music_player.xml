@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/background_dark"
+    tools:context="sg.edu.tp.whisper.MusicPlayerActivity"
+    android:weightSum="100">
+
+    <ImageView
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/imageView"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
+        app:srcCompat="@drawable/home"/>
+
+    <TextView
+        android:id="@+id/songName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_horizontal"
+        android:paddingStart="50dp"
+        android:paddingVertical="0dp"
+        android:text="Song Name"
+        android:textAlignment="viewStart"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/artiste"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_horizontal"
+
+        android:paddingVertical="5dp"
+        android:paddingStart="50dp"
+        android:text="Artiste Name"
+        android:textAlignment="viewStart"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        tools:ignore="RtlCompat"/>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:theme="@style/SeekBarColor" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:id="@+id/txtCurrentTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:text="0:00"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/txtDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="300dp"
+            android:text="0:30"
+            android:textColor="#FFFFFF" />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/shuffleButton"
+            android:layout_marginLeft="22dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="57dp"
+            android:onClick="shuffleSongBtn"
+            android:background="@drawable/cshuffle" />
+
+
+        <ImageButton
+            android:id="@+id/prevButton"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="40dp"
+            android:baselineAligned="false"
+            android:background="@drawable/dprev"
+            android:onClick="prevBtn"
+            app:srcCompat="@null" />
+
+
+        <ImageButton
+            android:id="@+id/playPauseBtn"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/fplay"
+            android:onClick="playOrPause"
+            app:srcCompat="@null" />
+
+
+        <ImageButton
+            android:id="@+id/nextButton"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/dnext"
+            android:onClick="nextBtn"
+            app:srcCompat="@null" />
+
+        <ImageButton
+            android:id="@+id/repeatButton"
+            android:layout_marginTop="57dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="repeatSongBtn"
+            android:background="@drawable/crepeat" />
+
+
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
