@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView topTracks, topArtistes;
     private SongCollection songCollection = new SongCollection();
-    ArrayList<Song> songList = songCollection.getSongs();
+    ArrayList<Song> songList = songCollection.getTopSongs();
     private HorizontalAdapter.RecyclerViewClickListener listener;
 
     @Override
