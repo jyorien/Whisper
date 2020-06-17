@@ -7,7 +7,7 @@ public class SongCollection {
     Random random = new Random();
     int randInt;
     SongCollection() {
-        prepareSongs();
+        prepareTrackList();
     }
 
     public Song searchById(String id) {
@@ -17,18 +17,18 @@ public class SongCollection {
             song = songs.get(index);
             if (song.getId().equals(id)) {
                 return song;
-
             }
-
         }
         return song;
     }
+
+
     private ArrayList<Song> songs = new ArrayList<>();
 
     ArrayList<Song> getSongs() {
         return songs;
     }
-    private void prepareSongs() {
+    private void prepareTrackList() {
         Song theWayYouLookTonight = new Song("S1001", "The Way You Look Tonight", "Michael Buble",
                 "a5b8972e764025020625bbf9c1c2bbb06e394a60?cid=2afe87a64b0042dabf51f37318616965",
                 4.66, R.drawable.michael_buble_collection);

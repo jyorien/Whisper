@@ -18,8 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignUpActivity extends AppCompatActivity implements
-        View.OnClickListener {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -115,6 +114,13 @@ public class SignUpActivity extends AppCompatActivity implements
 
     }
 }
-
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
+
+
+}
