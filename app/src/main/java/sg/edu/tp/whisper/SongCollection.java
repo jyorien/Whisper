@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class SongCollection {
-    Random random = new Random();
-    int randInt;
+
     SongCollection() {
         prepareTrackList();
         prepareTopTrackList();
@@ -75,48 +74,6 @@ public class SongCollection {
     }
 
 
-    public Song getNextSong(String currentSongId) {
-        Song song = null;
-
-        for(int i = 0; i < songs.size(); i++) {
-            if (songs.get(songs.size() - 1).getId().equals(currentSongId)) {
-                song = songs.get(0);
-                break;
-            }
-
-            String tempSongId = songs.get(i).getId();
-            if (tempSongId.equals(currentSongId)) {
-                song = songs.get(i+1);
-                break;
-            }
-        }
-        return song;
-
-    }
-
-    public Song getPrevSong(String currentSongId) {
-        Song song = null;
-
-        for(int i = 0; i < songs.size(); i++) {
-            if (songs.get(0).getId().equals(currentSongId)) {
-               song = songs.get(songs.size() - 1);
-                break;
-            }
-            String tempSongId = songs.get(i).getId();
-            if (tempSongId.equals(currentSongId)) {
-                song = songs.get(i-1);
-                break;
-            }
-        }
-        return song;
-
-    }
-    public Song getShuffleNextSong() {
-        Song song = null;
-        randInt = random.nextInt(songs.size());
-        song = songs.get(randInt);
-        return song;
-    }
 
 
     private ArrayList<Song> topSongs = new ArrayList<>();

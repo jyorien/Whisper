@@ -66,6 +66,11 @@ public class LibraryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("songList", songList);
+                intent.putExtras(bundle);
+
                 intent.putExtra("songName", songList.get(position).getTitle());
                 intent.putExtra("artisteID", songList.get(position).getArtiste());
                 intent.putExtra("coverArt",songList.get(position).getImageIcon());

@@ -14,10 +14,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MusicPlayerActivity extends AppCompatActivity {
 
+    ArrayList<Song> songList = new ArrayList<>();
     private boolean isShuffle = false;
     private boolean isLooping = false;
     ImageButton playPauseBtn = null;
@@ -40,7 +44,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private MediaPlayer player = null;
     private int musicPosition = 0; // to store position of the song when paused
 
-    private SongCollection songCollection = new SongCollection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +139,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            songList = (ArrayList<Song>) extras.getSerializable("songList");
             artisteName = extras.getString("artisteID");
             songTitle = extras.getString("songName");
             img = extras.getInt("coverArt");
@@ -204,7 +208,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void playNext() {
-        Song nextSong = songCollection.getNextSong(songId);
+        Song nextSong = getNextSong(songId);
         if (nextSong != null) {
             songId = nextSong.getId();
             songTitle = nextSong.getTitle();
@@ -227,6 +231,24 @@ public class MusicPlayerActivity extends AppCompatActivity {
             });
         }
     }
+    public Song getNextSong(String currentSongId) {
+        Song song = null;
+
+        for(int i = 0; i < songList.size(); i++) {
+            if (songList.get(songList.size() - 1).getId().equals(currentSongId)) {
+                song = songList.get(0);
+                break;
+            }
+
+            String tempSongId = songList.get(i).getId();
+            if (tempSongId.equals(currentSongId)) {
+                song = songList.get(i+1);
+                break;
+            }
+        }
+        return song;
+
+    }
 
     public void nextBtn(View view) {
         if (isShuffle == true) {
@@ -240,7 +262,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void playPrev() {
-        Song prevSong = songCollection.getPrevSong(songId);
+        Song prevSong = getPrevSong(songId);
         if (prevSong != null) {
             songId = prevSong.getId();
             songTitle = prevSong.getTitle();
@@ -265,6 +287,24 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
     }
 
+    public Song getPrevSong(String currentSongId) {
+        Song song = null;
+
+        for(int i = 0; i < songList.size(); i++) {
+            if (songList.get(0).getId().equals(currentSongId)) {
+                song = songList.get(songList.size() - 1);
+                break;
+            }
+            String tempSongId = songList.get(i).getId();
+            if (tempSongId.equals(currentSongId)) {
+                song = songList.get(i-1);
+                break;
+            }
+        }
+        return song;
+
+    }
+
     public void prevBtn(View view) {
         if (isShuffle == true) {
             shuffleSong();
@@ -273,6 +313,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
             playPrev();
         }
 
+    }
+
+    public Song getShuffleNextSong() {
+        int randInt;
+        Random random = new Random();
+        Song song = null;
+        randInt = random.nextInt(songList.size());
+        song = songList.get(randInt);
+        return song;
     }
 
     @Override
@@ -314,7 +363,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void shuffleSong() {
-        Song shuffledSong = songCollection.getShuffleNextSong();
+        Song shuffledSong = getShuffleNextSong();
         songId = shuffledSong.getId();
         songTitle = shuffledSong.getTitle();
         artisteName = shuffledSong.getArtiste();

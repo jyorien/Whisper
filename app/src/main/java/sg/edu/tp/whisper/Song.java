@@ -1,6 +1,8 @@
 package sg.edu.tp.whisper;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable {
     private String id;
     private int imageIcon;
     private String title;
