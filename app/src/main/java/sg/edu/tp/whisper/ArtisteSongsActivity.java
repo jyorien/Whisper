@@ -1,54 +1,37 @@
 package sg.edu.tp.whisper;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class LibraryActivity extends AppCompatActivity {
-
+public class ArtisteSongsActivity extends AppCompatActivity {
+    ArrayList<Song> songList = new ArrayList<>();
     private RecyclerView trackList;
-    private SongCollection songCollection = new SongCollection();
-    ArrayList<Song> songList = songCollection.getSongs();
     private TracksAdapter.RecyclerViewClickListener listener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
-        getSupportActionBar().setTitle("Library");
+        setContentView(R.layout.activity_artiste_songs);
+        retrieveData();
+        getSupportActionBar().setTitle(songList.get(0).getArtiste());
         setAdapter();
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
-
-        bottomNavigationView.setSelectedItemId(R.id.Library);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.Search:
-                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.Home:
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-
-                }
-                return false;
-            }
-        });
     }
+
+    private void retrieveData() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            songList = (ArrayList<Song>) extras.getSerializable("songList");
+        }
+    }
+
     private void setAdapter() {
         setOnClickListener();
         trackList = findViewById(R.id.trackList);
@@ -82,12 +65,5 @@ public class LibraryActivity extends AppCompatActivity {
             }
         };
     }
-    // Make the Back button exit the entire app
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
+
 }

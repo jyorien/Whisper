@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView topTracks, topArtistes;
     private SongCollection songCollection = new SongCollection();
     ArrayList<Song> songList = songCollection.getTopSongs();
+    ArrayList<Song> artisteList = songCollection.getTopArtistes();
     private HorizontalAdapter.RecyclerViewClickListener listener;
+    private HorizontalAdapter.RecyclerViewClickListener listener2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setOnClickListener();
         topArtistes = findViewById(R.id.topArtistes);
         topTracks = findViewById(R.id.topTracks);
-        HorizontalAdapter adapter1 = new HorizontalAdapter(this, songList, true, listener);
+        HorizontalAdapter adapter1 = new HorizontalAdapter(this, artisteList, true, listener2);
         HorizontalAdapter adapter2 = new HorizontalAdapter(this, songList, false, listener);
         LinearLayoutManager layoutManager1, layoutManager2;
 
@@ -80,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         listener = new HorizontalAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
+
+
                 Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
 
                 Bundle bundle = new Bundle();
@@ -90,8 +95,23 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("artisteID", songList.get(position).getArtiste());
                 intent.putExtra("coverArt",songList.get(position).getImageIcon());
                 intent.putExtra("fileLink", songList.get(position).getFileLink());
-                intent.putExtra("songLength",songList.get(position).getSongLength());
                 intent.putExtra("songId",songList.get(position).getId());
+
+                startActivity(intent);
+
+            }
+        };
+
+        listener2 = new HorizontalAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                //Toast.makeText(MainActivity.this, "pls work", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), ArtisteSongsActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("songList", artisteList.get(position).getSongList());
+                intent.putExtras(bundle);
+
 
                 startActivity(intent);
 

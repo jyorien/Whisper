@@ -1,0 +1,30 @@
+[33mcommit 039a29369bbd470b0ebb45ad80dd603103919ecc[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: joey <jyorin0206@gmail.com>
+Date:   Thu Jun 18 15:56:47 2020 +0800
+
+    Moved the next/prev/shuffle methods from song collection class to the music player activity,
+     managed to serialize the arraylist
+
+[33mcommit 27a4e30caaddc877b14537bc13e24a3fd6122569[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: joey <jyorin0206@gmail.com>
+Date:   Wed Jun 17 17:41:56 2020 +0800
+
+    Added a separate list for Top Tracks and Library
+
+[33mcommit 0ddda1ac80ac91f7a3a0d1d1faeb4b5ae288b4eb[m
+Author: joey <jyorin0206@gmail.com>
+Date:   Wed Jun 17 15:12:05 2020 +0800
+
+    Added sign out button, settings activity
+
+[33mcommit 63316c52dbd5f83c185daf7bcaccf8b10fd80e3d[m
+Author: joey <jyorin0206@gmail.com>
+Date:   Tue Jun 16 21:27:30 2020 +0800
+
+    Added firebase auth
+
+[33mcommit 7285c2d2a800678360aff61e69cd5698c781789b[m
+Author: joey <jyorin0206@gmail.com>
+Date:   Tue Jun 16 15:30:51 2020 +0800
+
+    Initial commit

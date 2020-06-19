@@ -1,6 +1,7 @@
 package sg.edu.tp.whisper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Song implements Serializable {
     private String id;
@@ -9,14 +10,15 @@ public class Song implements Serializable {
     private String artiste;
     private String fileLink;
     private double songLength;
+    private ArrayList<Song> songList;
 
-    public Song(String id, String title, String artiste, String fileLink, double songLength, int imageIcon) {
+    public Song(String id, String title, String artiste, String fileLink, int imageIcon, ArrayList<Song> songList) {
         this.id = id;
         this.imageIcon = imageIcon;
         this.title = title;
         this.artiste = artiste;
         this.fileLink = fileLink;
-        this.songLength = songLength;
+        this.songList = songList;
     }
 
     String getId() { return id; }
@@ -25,8 +27,6 @@ public class Song implements Serializable {
     public String getFileLink() { return fileLink; }
     public void setFileLink(String fileLink) { this.fileLink = fileLink; }
 
-    public double getSongLength() { return songLength; }
-    public void setSongLength(double songLength) { this.songLength = songLength; }
 
     int getImageIcon() {
         return imageIcon;
@@ -42,5 +42,13 @@ public class Song implements Serializable {
         return artiste;
     }
     public void setArtiste(String artiste) { this.artiste = artiste; }
+
+    public ArrayList<Song> getSongList() {
+        return songList;
+    }
+
+    public void setSongList(ArrayList<Song> songList) {
+        this.songList = songList;
+    }
 }
 
