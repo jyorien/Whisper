@@ -70,4 +70,9 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.Viewholder
     public interface RecyclerViewClickListener{
         void onClick(View v, int position);
     }
+    public void filterList(ArrayList<Song> songList){
+        this.songList = songList;
+        notifyDataSetChanged();
+    }
+
 }

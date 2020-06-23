@@ -13,6 +13,7 @@ public class SongCollection {
         prepareOneOkRockSongs();
         prepareColdPlaySongs();
         prepareTopArtistes();
+        prepareAllSongs();
     }
 
 
@@ -283,9 +284,13 @@ public class SongCollection {
 
     }
 
+    private ArrayList<Song> allSongs = new ArrayList<>();
 
-
-
-
-
+    ArrayList<Song> getAllSongs() {return allSongs; }
+    private void prepareAllSongs() {
+        allSongs.addAll(coldPlaySongs);
+        allSongs.addAll(oneOkRockSongs);
+        allSongs.addAll(edSheeranSongs);
+        allSongs.addAll(theCabSongs);
+    }
 }

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // setting the recyclerview adapter
     private void setAdapter() {
         setOnClickListener();
         topArtistes = findViewById(R.id.topArtistes);
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // setting on click listeners for the two lists of items
     private void setOnClickListener() {
         listener = new HorizontalAdapter.RecyclerViewClickListener() {
             @Override

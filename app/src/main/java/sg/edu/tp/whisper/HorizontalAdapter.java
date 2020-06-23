@@ -53,9 +53,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     }
 
 
-
-
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

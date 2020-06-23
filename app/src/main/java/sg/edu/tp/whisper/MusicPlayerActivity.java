@@ -148,6 +148,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             url = BASE_URL + fileLink;
         }
 
+
     }
 
     private void displaySong(String title, String artisteName, int image) {
@@ -218,7 +219,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             url = BASE_URL + fileLink;
             displaySong(songTitle, artisteName, img);
             //stopActivities();
-            preparePlayer();
+            /*preparePlayer();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer player) {
@@ -228,11 +229,33 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     playPauseBtn.setBackgroundResource(R.drawable.fpause);
 
                 }
-            });
+            });*/
         }
+        else {
+            url = BASE_URL + fileLink;
+            displaySong(songTitle, artisteName, img);
+
+        }
+        preparePlayer();
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                seekBar.setMax(player.getDuration());
+                player.start();
+                setTitle("Now playing: " + songTitle + " by " + artisteName);
+                playPauseBtn.setBackgroundResource(R.drawable.fpause);
+
+            }
+        });
+
     }
     public Song getNextSong(String currentSongId) {
         Song song = null;
+
+        if (songList == null) {
+            return song;
+        }
+
 
         for(int i = 0; i < songList.size(); i++) {
             if (songList.get(songList.size() - 1).getId().equals(currentSongId)) {
@@ -271,24 +294,33 @@ public class MusicPlayerActivity extends AppCompatActivity {
             img = prevSong.getImageIcon();
             url = BASE_URL + fileLink;
             displaySong(songTitle, artisteName, img);
-            //stopActivities();
-            preparePlayer();
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer player) {
-                    player.start();
-                    setTitle("Now playing: " + songTitle + " by " + artisteName);
-                    playPauseBtn.setBackgroundResource(R.drawable.fpause);
-
-                }
-            });
-
 
         }
+        else {
+            url = BASE_URL + fileLink;
+            displaySong(songTitle, artisteName, img);
+
+        }
+        //stopActivities();
+        preparePlayer();
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                player.start();
+                setTitle("Now playing: " + songTitle + " by " + artisteName);
+                playPauseBtn.setBackgroundResource(R.drawable.fpause);
+
+            }
+        });
+
     }
 
     public Song getPrevSong(String currentSongId) {
         Song song = null;
+
+        if (songList == null) {
+            return song;
+        }
 
         for(int i = 0; i < songList.size(); i++) {
             if (songList.get(0).getId().equals(currentSongId)) {
@@ -316,9 +348,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public Song getShuffleNextSong() {
+
         int randInt;
         Random random = new Random();
         Song song = null;
+        if (songList == null) {
+            return song;
+        }
         randInt = random.nextInt(songList.size());
         song = songList.get(randInt);
         return song;
@@ -364,13 +400,19 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     public void shuffleSong() {
         Song shuffledSong = getShuffleNextSong();
-        songId = shuffledSong.getId();
-        songTitle = shuffledSong.getTitle();
-        artisteName = shuffledSong.getArtiste();
-        fileLink = shuffledSong.getFileLink();
-        img = shuffledSong.getImageIcon();
-        url = BASE_URL + fileLink;
-        displaySong(songTitle, artisteName, img);
+        if (shuffledSong != null) {
+            songId = shuffledSong.getId();
+            songTitle = shuffledSong.getTitle();
+            artisteName = shuffledSong.getArtiste();
+            fileLink = shuffledSong.getFileLink();
+            img = shuffledSong.getImageIcon();
+            url = BASE_URL + fileLink;
+            displaySong(songTitle, artisteName, img);
+        }
+        else {
+            url = BASE_URL + fileLink;
+            displaySong(songTitle, artisteName, img);
+        }
         //stopActivities();
         preparePlayer();
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

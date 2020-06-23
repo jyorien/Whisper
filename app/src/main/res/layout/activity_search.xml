@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#000000"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,5 +16,20 @@
         app:itemIconTint="@drawable/selector"
         app:menu="@menu/menu_nav"
         android:layout_alignParentBottom="true"/>
+
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Search..."
+        android:textColorHint="#D1D0D0"
+        android:textColor="#D1D0D0"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allSongsList"
+        android:paddingTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

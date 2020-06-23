@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".LibraryActivity" />
-        <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MusicPlayerActivity" />
         <activity android:name=".MainActivity" />
 
