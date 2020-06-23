@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
     FirebaseUser user;
     FirebaseAuth mAuth;
     EditText existingEmail, existingPssword;

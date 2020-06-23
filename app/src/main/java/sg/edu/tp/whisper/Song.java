@@ -12,13 +12,12 @@ public class Song implements Serializable {
     private double songLength;
     private ArrayList<Song> songList;
 
-    public Song(String id, String title, String artiste, String fileLink, int imageIcon, ArrayList<Song> songList) {
+    public Song(String id, String title, String artiste, String fileLink, int imageIcon) {
         this.id = id;
         this.imageIcon = imageIcon;
         this.title = title;
         this.artiste = artiste;
         this.fileLink = fileLink;
-        this.songList = songList;
     }
 
     String getId() { return id; }

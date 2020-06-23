@@ -24,12 +24,16 @@
         android:ems="10"
         android:hint="Search..."
         android:textColorHint="#D1D0D0"
+        android:maxLines="1"
+        android:inputType="text"
+        android:singleLine="true"
         android:textColor="#D1D0D0"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allSongsList"
         android:paddingTop="40dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"/>
 
 </RelativeLayout>

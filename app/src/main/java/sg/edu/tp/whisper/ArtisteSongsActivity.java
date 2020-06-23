@@ -15,7 +15,6 @@ public class ArtisteSongsActivity extends AppCompatActivity {
     private RecyclerView trackList;
     private TracksAdapter.RecyclerViewClickListener listener;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

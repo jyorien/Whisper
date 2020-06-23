@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.ViewHolder> {
+
     private final boolean showSongTitle;
     private Context context;
     private ArrayList<Song> songList;
@@ -37,8 +38,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
             imageView = itemView.findViewById(R.id.imageView);
             title = itemView.findViewById(R.id.songTitle);
             artiste = itemView.findViewById(R.id.artisteName);
+
             itemView.setOnClickListener(this);
         }
+
         private void setData(int imageResource, String songTitle, String artisteName ) {
             imageView.setImageResource(imageResource);
             title.setText(songTitle);
@@ -51,7 +54,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         }
 
     }
-
 
     @NonNull
     @Override
@@ -69,7 +71,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         if(showSongTitle) {
             title = "";
             holder.setData(resource, title, artiste);
-
         }
         else {
             holder.setData(resource, title, artiste);
@@ -85,5 +86,4 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     public interface RecyclerViewClickListener{
         void onClick(View v, int position);
     }
-
 }

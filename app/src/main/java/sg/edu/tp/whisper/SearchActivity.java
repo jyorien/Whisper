@@ -49,17 +49,16 @@ public class SearchActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(),MainActivity.class));
                         overridePendingTransition(0,0);
                         return true;
+
                     case R.id.Library:
                         startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-
                 }
                 return false;
             }
         });
         EditText searchInput = findViewById(R.id.searchInput);
-
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -74,9 +73,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 filter(s.toString());
-
             }
-
         });
     }
 
@@ -91,12 +88,12 @@ public class SearchActivity extends AppCompatActivity {
                 if (song.getTitle().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(song);
                 }
+                else if (song.getArtiste().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(song);
+                }
             }
             adapter.filterList(filteredList);
-
         }
-
-
     }
 
     private void setAdapter() {
@@ -116,8 +113,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
-
-
                 intent.putExtra("songName", filteredList.get(position).getTitle());
                 intent.putExtra("artisteID", filteredList.get(position).getArtiste());
                 intent.putExtra("coverArt",filteredList.get(position).getImageIcon());
@@ -129,9 +124,6 @@ public class SearchActivity extends AppCompatActivity {
             }
         };
     }
-
-
-
 
     // Make the Back button exit the entire app
     @Override
