@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Song Name"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textColor"
         android:textSize="16sp"
         android:gravity="center"
         />
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="Arist Name"
         android:textSize="16sp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textColor"
         android:gravity="center"
         />
 

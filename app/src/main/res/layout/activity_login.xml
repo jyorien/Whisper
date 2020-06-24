@@ -4,16 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:context=".LoginActivity">
 
     <EditText
         android:id="@+id/existingEmail"
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        android:layout_margin="40dp"
+        android:backgroundTint="@color/textColor"
         android:ems="10"
         android:hint="Email"
-        android:layout_margin="40dp"
         android:inputType="textEmailAddress"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -25,10 +29,13 @@
         android:id="@+id/existingPassword"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:ems="10"
         android:layout_margin="40dp"
+        android:backgroundTint="@color/textColor"
+        android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -40,8 +47,8 @@
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LOGIN"
         android:layout_margin="40dp"
+        android:text="LOGIN"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -49,27 +56,42 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.738" />
 
+
     <TextView
         android:id="@+id/btnSignUpPage"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Don't have an account? Sign up here!"
         android:textAlignment="center"
+        android:textColor="@color/textColor"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.794"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintVertical_bias="0.794" />
+
     <ProgressBar
         android:id="@+id/progressBar"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.327" />
+
+    <ImageView
+        android:id="@+id/appLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="300dp"
+        app:layout_constraintStart_toStartOf="@+id/btnSignUpPage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/app_logo" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

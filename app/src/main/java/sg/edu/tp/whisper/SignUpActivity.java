@@ -30,6 +30,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        getSupportActionBar().setTitle("Sign Up");
+
         newEmail = findViewById(R.id.newEmail);
         newPassword = findViewById(R.id.newPassword);
         progressBar = findViewById(R.id.progressBar);

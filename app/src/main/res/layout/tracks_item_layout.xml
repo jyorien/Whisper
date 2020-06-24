@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="0dp"
-    android:layout_marginBottom="0dp"
-    android:background="#000000">
+    android:layout_marginBottom="0dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -26,7 +25,7 @@
         android:layout_marginStart="130dp"
         android:fontFamily="@font/open_sans_light"
         android:text="TextView"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textColor"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -39,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="130dp"
         android:text="TextView"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textColor"
         android:textSize="12sp"
 
         app:layout_constraintBottom_toBottomOf="parent"

@@ -30,6 +30,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        getSupportActionBar().setTitle("Login");
+
         mAuth = FirebaseAuth.getInstance();
 
         existingEmail = findViewById(R.id.existingEmail);

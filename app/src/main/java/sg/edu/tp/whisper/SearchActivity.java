@@ -46,12 +46,16 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.Home:
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.Library:
-                        startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                        intent = new Intent(getApplicationContext(), LibraryActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         overridePendingTransition(0,0);
                         return true;
                 }
