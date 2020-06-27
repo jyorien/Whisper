@@ -79,12 +79,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     user = mAuth.getCurrentUser();
+
                     if (!user.isEmailVerified()) {
                         Toast.makeText(getApplicationContext(), "Please verify your email!",Toast.LENGTH_LONG).show();
                         return;
                     }
+
                     else {
-                        Intent intent = new Intent(LoginActivity.this,MainActivity.class );
+                        Intent intent = new Intent(LoginActivity.this,WelcomeScreen.class );
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     }

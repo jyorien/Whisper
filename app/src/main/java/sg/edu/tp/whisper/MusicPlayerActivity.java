@@ -390,7 +390,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             isLooping = false;
             shuffleButton.setBackgroundResource(R.drawable.cshuffle2);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
-            setTitle("Shuffle");
+            //setTitle("Shuffle");
         }
         else if (isShuffle == true) {
             isShuffle = false;
