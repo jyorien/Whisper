@@ -22,7 +22,7 @@ public class WelcomeScreen extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_screen);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-             name = user.getEmail();
+             name = user.getDisplayName();
         }
         userEmail = findViewById(R.id.userEmail);
         userEmail.append(name + "!");
@@ -31,6 +31,6 @@ public class WelcomeScreen extends AppCompatActivity {
             @Override public void run() {
                 Intent intent = new Intent(WelcomeScreen.this, MainActivity.class);
                 startActivity(intent);
-                finish(); } }, 100);
+                finish(); } }, 500);
     }
 }
