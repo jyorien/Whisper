@@ -26,47 +26,63 @@
         app:layout_constraintVertical_bias="0.428" />
 
     <EditText
-        android:id="@+id/newPassword"
+    android:id="@+id/newPassword"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:ems="10"
+    android:layout_margin="40dp"
+    android:hint="Password"
+    android:textColorHint="@color/textColor"
+    android:textColor="@color/textColor"
+    android:backgroundTint="@color/textColor"
+    android:inputType="textPassword"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.496"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.575" />
+
+    <EditText
+        android:id="@+id/newPasswordConfirm"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:ems="10"
         android:layout_margin="40dp"
-        android:hint="Password"
-        android:textColorHint="@color/textColor"
-        android:textColor="@color/textColor"
         android:backgroundTint="@color/textColor"
+        android:ems="10"
+        android:hint="Confirm password"
         android:inputType="textPassword"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.575" />
+        app:layout_constraintVertical_bias="0.731" />
 
     <Button
         android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Up"
         android:layout_margin="40dp"
+        android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.738" />
+        app:layout_constraintVertical_bias="0.87" />
 
     <TextView
         android:id="@+id/btnLoginPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Already have an account? Login here!"
-        android:textColor="@color/textColor"
         android:textAlignment="center"
+        android:textColor="@color/textColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.794"
+        app:layout_constraintVertical_bias="0.918"
         tools:layout_editor_absoluteX="0dp" />
 
     <ProgressBar

@@ -15,13 +15,13 @@ import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
     SongCollection songCollection = new SongCollection();
     ArrayList<Song> allSongs = songCollection.getAllSongs();
-    ArrayList<Song> emptySongs = new ArrayList<>();
-    ArrayList<Song> filteredList;
+    ArrayList<Song> filteredList = new ArrayList<>();
 
 
     private RecyclerView allSongsList;
@@ -82,10 +82,10 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void filter(String text) {
-        filteredList = new ArrayList<>();
+        filteredList.clear();
 
         if (text.isEmpty()) {
-            adapter.filterList(emptySongs);
+            adapter.filterList(filteredList);
         }
         else {
             for(Song song : allSongs) {
@@ -103,7 +103,7 @@ public class SearchActivity extends AppCompatActivity {
     private void setAdapter() {
         setOnClickListener();
         allSongsList = findViewById(R.id.allSongsList);
-        adapter = new TracksAdapter(emptySongs, listener);
+        adapter = new TracksAdapter(filteredList, listener);
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

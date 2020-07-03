@@ -22,7 +22,13 @@ public class WelcomeScreen extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_screen);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-             name = user.getDisplayName();
+            if (user.getDisplayName() != null) {
+                name = user.getDisplayName();
+            }
+            else {
+                name = "user";
+            }
+
         }
         userEmail = findViewById(R.id.userEmail);
         userEmail.append(name + "!");

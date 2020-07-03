@@ -24,6 +24,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getSupportActionBar().setTitle("Settings");
 
         username = findViewById(R.id.username);
 
@@ -53,8 +54,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(updatedName).build();
         user.updateProfile(profileUpdates);
-        username.getText().clear();
-        Toast.makeText(getApplicationContext(), "Username updated!",Toast.LENGTH_SHORT).show();
+        //username.getText().clear();
+        Toast.makeText(getApplicationContext(), "Username updated to " + updatedName + "!",Toast.LENGTH_SHORT).show();
 
     }
 }

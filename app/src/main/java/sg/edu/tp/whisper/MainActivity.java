@@ -15,6 +15,8 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -26,11 +28,21 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Song> artisteList = songCollection.getTopArtistes();
     private HorizontalAdapter.RecyclerViewClickListener listener;
     private HorizontalAdapter.RecyclerViewClickListener listener2;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Home");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        String name;
+        if (user.getDisplayName() != null) {
+            name = user.getDisplayName();
+        }
+        else {
+            name = "user";
+        }
+
+        getSupportActionBar().setTitle("Welcome home, " + name + "!");
         setContentView(R.layout.activity_main);
 
 

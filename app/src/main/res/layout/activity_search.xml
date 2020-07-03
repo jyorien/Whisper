@@ -19,6 +19,7 @@
 
     <EditText
         android:id="@+id/searchInput"
+        android:layout_alignParentStart="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -31,7 +32,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allSongsList"
-        android:paddingTop="40dp"
+        android:layout_below="@+id/searchInput"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?attr/actionBarSize"/>
