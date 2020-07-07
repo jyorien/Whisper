@@ -12,9 +12,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,6 +28,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     ImageButton repeatButton = null;
     ImageButton shuffleButton = null;
     TextView txtCurrentTime = null;
+    SongCollection songCollection = new SongCollection();
 
     private SeekBar seekBar = null;
     private Handler handler;
@@ -57,7 +58,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         // On create, media player starts playing audio
         retrieveData();
         displaySong(songTitle, artisteName, img);
-        playPauseBtn = findViewById(R.id.playPauseBtn);
+        playPauseBtn = findViewById(R.id.playPauseButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
         player = new MediaPlayer();
         preparePlayer();
@@ -106,8 +107,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     }
 
-    public void playOrPause(View view) {
-        playPauseBtn = findViewById(R.id.playPauseBtn);
+    public void playOrPauseBtn(View view) {
+        playPauseBtn = findViewById(R.id.playPauseButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
           /*if (player == null)
               preparePlayer();
@@ -495,4 +496,20 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
     };
 
+    public void addToLibraryBtn(View view) {
+        //ArrayList<Song> songList = songCollection.getLibrarySongs();
+        Song song = null;
+        for(int i = 0; i < songList.size(); i++) {
+            String tempSongId = songList.get(i).getId();
+            if (tempSongId.equals(songId)) {
+                song = songList.get(i);
+                break;
+            }
+        }
+        LibraryActivity.songList.add(song);
+
+        //songList.add(song);
+        Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_LONG).show();
+
+    }
 }

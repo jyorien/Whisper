@@ -17,8 +17,10 @@ import java.util.ArrayList;
 public class LibraryActivity extends AppCompatActivity {
 
     private RecyclerView trackList;
-    private SongCollection songCollection = new SongCollection();
-    ArrayList<Song> songList = songCollection.getSongs();
+    //private SongCollection songCollection = new SongCollection();
+    public static ArrayList<Song> songList = new ArrayList<>();
+
+
     private TracksAdapter.RecyclerViewClickListener listener;
 
     @Override
@@ -27,6 +29,7 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library);
         getSupportActionBar().setTitle("Library");
         setAdapter();
+        //prepareLibraryList();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
 
         bottomNavigationView.setSelectedItemId(R.id.Library);
@@ -93,5 +96,17 @@ public class LibraryActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+    /*private void prepareLibraryList() {
+        Song theWayYouLookTonight = new Song("S1001", "The Way You Look Tonight", "Michael Buble",
+                "a5b8972e764025020625bbf9c1c2bbb06e394a60?cid=2afe87a64b0042dabf51f37318616965",
+                R.drawable.michael_buble_collection);
+        songList.add(theWayYouLookTonight);
+    }*/
+
+    @Override
+    protected void onDestroy() {
+        songList.clear();
+        super.onDestroy();
     }
 }

@@ -117,6 +117,11 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
                 Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("songList", filteredList);
+                intent.putExtras(bundle);
+
                 intent.putExtra("songName", filteredList.get(position).getTitle());
                 intent.putExtra("artisteID", filteredList.get(position).getArtiste());
                 intent.putExtra("coverArt",filteredList.get(position).getImageIcon());

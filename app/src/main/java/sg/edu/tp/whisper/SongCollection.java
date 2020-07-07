@@ -1,12 +1,11 @@
 package sg.edu.tp.whisper;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class SongCollection {
 
     SongCollection() {
-        prepareTrackList();
+        //prepareLibraryList();
         prepareTopTrackList();
         prepareEdSheeranSongList();
         prepareTheCabSongs();
@@ -16,17 +15,17 @@ public class SongCollection {
         prepareAllSongs();
     }
 
-    private ArrayList<Song> songs = new ArrayList<>();
+    /*private static ArrayList<Song> librarySongs = new ArrayList<>();
 
-    ArrayList<Song> getSongs() {
-        return songs;
+    ArrayList<Song> getLibrarySongs() {
+        return librarySongs;
     }
-    private void prepareTrackList() {
+    private void prepareLibraryList() {
         Song theWayYouLookTonight = new Song("S1001", "The Way You Look Tonight", "Michael Buble",
                 "a5b8972e764025020625bbf9c1c2bbb06e394a60?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.michael_buble_collection);
 
-        Song billieJean = new Song("S1002", "Billie Jean", "Michael Jackson",
+        /*Song billieJean = new Song("S1002", "Billie Jean", "Michael Jackson",
                 "f504e6b8e037771318656394f532dede4f9bcaea?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.billie_jean);
 
@@ -51,20 +50,20 @@ public class SongCollection {
                  R.drawable.the_scientist);
 
         Song boyWithLuv = new Song("S1008", "Boy With Luv", "BTS",
-                "d16797fb391fb909f3c46454d7cf89a2718f8171?cid=2afe87a64b0042dabf51f37318616965",  R.drawable.persona);
+                "d16797fb391fb909f3c46454d7cf89a2718f8171?cid=2afe87a64b0042dabf51f37318616965",  R.drawable.persona);*/
 
 
-        songs.add(theWayYouLookTonight);
-        songs.add(billieJean);
-        songs.add(photograph);
-        songs.add(endlessly);
-        songs.add(wonderwall);
-        songs.add(lettingGo);
-        songs.add(theScientist);
-        songs.add(boyWithLuv);
+        //librarySongs.add(theWayYouLookTonight);
+        /*librarySongs.add(billieJean);
+        librarySongs.add(photograph);
+        librarySongs.add(endlessly);
+        librarySongs.add(wonderwall);
+        librarySongs.add(lettingGo);
+        librarySongs.add(theScientist);
+        librarySongs.add(boyWithLuv);
 
 
-    }
+    }*/
 
 
     private ArrayList<Song> topSongs = new ArrayList<>();
