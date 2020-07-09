@@ -2,6 +2,9 @@ package sg.edu.tp.whisper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,7 +19,11 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import java.util.Random;
+
+
+//import com.google.gson.Gson;
 
 
 public class MusicPlayerActivity extends AppCompatActivity {
@@ -28,7 +35,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
     ImageButton repeatButton = null;
     ImageButton shuffleButton = null;
     TextView txtCurrentTime = null;
-    SongCollection songCollection = new SongCollection();
+    Boolean isLibraryActivity = false;
+    //SongCollection songCollection = new SongCollection();
+    //SharedPreferences mPrefs;
 
     private SeekBar seekBar = null;
     private Handler handler;
@@ -50,6 +59,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
+         //mPrefs = getPreferences(MusicPlayerActivity.this.MODE_PRIVATE);
 
         seekBar = findViewById(R.id.seekBar);
         handler = new Handler();
@@ -146,6 +156,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             img = extras.getInt("coverArt");
             songId = extras.getString("songId");
             fileLink = extras.getString("fileLink");
+            isLibraryActivity = extras.getBoolean("isLibraryActivity");
             url = BASE_URL + fileLink;
         }
 
@@ -365,6 +376,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     protected void onDestroy() {
         stopActivities();
         super.onDestroy();
+
     }
 
     public void repeatSongBtn(View view) {
@@ -497,8 +509,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
     };
 
     public void addToLibraryBtn(View view) {
-        //ArrayList<Song> songList = songCollection.getLibrarySongs();
+        //store the current song object
+        Boolean isAdded = false;
         Song song = null;
+        //get the current song object
         for(int i = 0; i < songList.size(); i++) {
             String tempSongId = songList.get(i).getId();
             if (tempSongId.equals(songId)) {
@@ -506,10 +520,45 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 break;
             }
         }
-        LibraryActivity.songList.add(song);
+
+        for (int i = 0; i < SongCollection.librarySongs.size(); i++){
+            if (song.getId().equals(SongCollection.librarySongs.get(i).getId())) {
+                isAdded = true;
+                SongCollection.librarySongs.remove(i);
+                Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
+        if (isAdded == false) {
+            SongCollection.librarySongs.add(song);
+            Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
+        }
+
+        //LibraryActivity.songList.add(song);
+
+        /*SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        Set<String> set = new HashSet<Song>;
+        set.addAll(songList);
+        //String json = gson.toJson(songList);
+        prefsEditor.putStringSet("songList", set);
+        prefsEditor.commit();*/
+
 
         //songList.add(song);
-        Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_LONG).show();
+
 
     }
+
+    @Override
+    public void onBackPressed() {
+        if (isLibraryActivity == true) {
+            startActivity(new Intent(getApplication(), LibraryActivity.class));
+        }
+        else {
+            super.onBackPressed();
+        }
+
+    }
+
 }
