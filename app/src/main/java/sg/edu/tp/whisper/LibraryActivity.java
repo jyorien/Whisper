@@ -5,20 +5,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import android.content.Intent;
+//import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+//import com.google.gson.Gson;
+
+
+
 
 import java.util.ArrayList;
 
 public class LibraryActivity extends AppCompatActivity {
 
     private RecyclerView trackList;
-    //private SongCollection songCollection = new SongCollection();
+    private SongCollection songCollection = new SongCollection();
     public static ArrayList<Song> songList = new ArrayList<>();
+    private Boolean isLibraryActivity = true;
+    //SharedPreferences mPrefs = getPreferences(Context.MODE_PRIVATE);
+
+
+
+
 
 
     private TracksAdapter.RecyclerViewClickListener listener;
@@ -28,8 +40,16 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
         getSupportActionBar().setTitle("Library");
-        setAdapter();
+        //songList = LibraryList.getLibraryList().songList;
+        songList = songCollection.librarySongs;
         //prepareLibraryList();
+        /*Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Song>>(){}.getType();
+        String json = mPrefs.getString("songList", "");
+        songList = gson.fromJson(json, type);*/
+        setAdapter();
+
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
 
         bottomNavigationView.setSelectedItemId(R.id.Library);
@@ -83,6 +103,8 @@ public class LibraryActivity extends AppCompatActivity {
                 intent.putExtra("coverArt",songList.get(position).getImageIcon());
                 intent.putExtra("fileLink", songList.get(position).getFileLink());
                 intent.putExtra("songId",songList.get(position).getId());
+                intent.putExtra("isLibraryActivity", isLibraryActivity);
+
 
                 startActivity(intent);
 
@@ -104,9 +126,10 @@ public class LibraryActivity extends AppCompatActivity {
         songList.add(theWayYouLookTonight);
     }*/
 
-    @Override
+
+    /*@Override
     protected void onDestroy() {
         songList.clear();
         super.onDestroy();
-    }
+    }*/
 }

@@ -9,6 +9,8 @@
     android:background="@color/backgroundColor"
     tools:context="sg.edu.tp.whisper.MusicPlayerActivity">
 
+
+
     <ImageView
 
         android:layout_marginTop="10dp"
@@ -29,14 +31,9 @@
         android:textColor="#FFFFFF"
         android:textSize="24sp"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
     <TextView
         android:id="@+id/artiste"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center|center_horizontal"
         android:paddingStart="20dp"
@@ -46,16 +43,15 @@
         android:textSize="14sp"
         tools:ignore="RtlCompat"/>
 
-        <ImageButton
-            android:id="@+id/addToLibraryButton"
-            android:onClick="addToLibraryBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/add_button"
-            android:layout_marginLeft="250dp"/>
 
-    </LinearLayout>
-
+    <ImageButton
+        android:id="@+id/addToLibraryButton"
+        android:onClick="addToLibraryBtn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/add_button"
+        android:layout_marginRight="30dp"
+        android:layout_gravity="end"/>
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -102,7 +98,7 @@
             android:layout_marginLeft="22dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="37dp"
+            android:layout_marginTop="27dp"
             android:onClick="shuffleSongBtn"
             android:background="@drawable/cshuffle" />
 
@@ -112,7 +108,7 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginLeft="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:baselineAligned="false"
             android:background="@drawable/dprev"
             android:onClick="prevBtn"
@@ -124,7 +120,7 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginLeft="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/fplay"
             android:onClick="playOrPauseBtn"
             app:srcCompat="@null" />
@@ -135,14 +131,14 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginLeft="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/dnext"
             android:onClick="nextBtn"
             app:srcCompat="@null" />
 
         <ImageButton
             android:id="@+id/repeatButton"
-            android:layout_marginTop="37dp"
+            android:layout_marginTop="27dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:onClick="repeatSongBtn"
