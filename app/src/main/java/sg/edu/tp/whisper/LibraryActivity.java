@@ -9,10 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 //import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 //import com.google.gson.Gson;
 
 
@@ -22,17 +29,16 @@ import java.util.ArrayList;
 
 public class LibraryActivity extends AppCompatActivity {
 
+    private static final String TAG = "LibraryActivity";
     private RecyclerView trackList;
-    private SongCollection songCollection = new SongCollection();
-    public static ArrayList<Song> songList = new ArrayList<>();
+    //private SongCollection songCollection = new SongCollection();
+    private static ArrayList<Song> songList = new ArrayList<>();
     private Boolean isLibraryActivity = true;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference();
     //SharedPreferences mPrefs = getPreferences(Context.MODE_PRIVATE);
 
-
-
-
-
-
+    TracksAdapter adapter;
     private TracksAdapter.RecyclerViewClickListener listener;
 
     @Override
@@ -40,13 +46,15 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
         getSupportActionBar().setTitle("Library");
+        prepareLibrarySongs();
         //songList = LibraryList.getLibraryList().songList;
-        songList = songCollection.librarySongs;
+        //songList = SongCollection.librarySongs;
         //prepareLibraryList();
         /*Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Song>>(){}.getType();
         String json = mPrefs.getString("songList", "");
         songList = gson.fromJson(json, type);*/
+
         setAdapter();
 
 
@@ -60,6 +68,7 @@ public class LibraryActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.Search:
                         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                        finish();
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         overridePendingTransition(0,0);
@@ -67,6 +76,7 @@ public class LibraryActivity extends AppCompatActivity {
 
                     case R.id.Home:
                         intent = new Intent(getApplicationContext(), MainActivity.class);
+                        finish();
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         overridePendingTransition(0,0);
@@ -79,7 +89,7 @@ public class LibraryActivity extends AppCompatActivity {
     private void setAdapter() {
         setOnClickListener();
         trackList = findViewById(R.id.trackList);
-        TracksAdapter adapter = new TracksAdapter(songList, listener);
+        adapter = new TracksAdapter(songList, listener);
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -105,7 +115,7 @@ public class LibraryActivity extends AppCompatActivity {
                 intent.putExtra("songId",songList.get(position).getId());
                 intent.putExtra("isLibraryActivity", isLibraryActivity);
 
-
+                finish();
                 startActivity(intent);
 
             }
@@ -119,6 +129,86 @@ public class LibraryActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    private void prepareLibrarySongs() {
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                //String value = dataSnapshot.getValue().toString();
+                //String value = dataSnapshot.getKey();
+                //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
+                String[] valueArray = new String[5];
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //String value = ds.getValue().toString();
+                    Song song;
+                    String value = ds.getValue().toString();
+
+                    if (value != null){
+                        valueArray = value.split(","); }
+                    String songId = valueArray[0];
+                    String title = valueArray[1];
+                    String artiste = valueArray[2];
+                    String fileLink = valueArray[3];
+                    String imageIcon = valueArray[4];
+                    int image = Integer.parseInt(imageIcon);
+                    song = new Song(songId, title, artiste, fileLink, image);
+                    boolean isAdded = false;
+
+                    for (int i = 0; i < songList.size(); i++){
+                        if (song.getId().equals(songList.get(i).getId())) {
+                            isAdded = true;
+
+                            //SongCollection.librarySongs.remove(i);
+                            //songList.remove(song);
+                            break;
+                        }
+                    }
+                    if(isAdded == false)
+                        songList.add(song);
+
+                }
+                adapter.filterList(songList);
+
+                /*Song song;
+                String[] valueArray = new String[5];
+                String value = dataSnapshot.getValue(String.class);
+                if (value != null){
+                    valueArray = value.split(","); }
+                String songId = valueArray[0];
+                String title = valueArray[1];
+                String artiste = valueArray[2];
+                String fileLink = valueArray[3];
+                String imageIcon = valueArray[4];
+                int image = Integer.parseInt(imageIcon);
+                song = new Song(songId, title, artiste, fileLink, image);
+                boolean isAdded = false;
+                for (int i = 0; i < songList.size(); i++){
+                    if (song.getId().equals(songList.get(i).getId())) {
+                        isAdded = true;
+
+                        //SongCollection.librarySongs.remove(i);
+                        break;
+                    }
+                }
+                if(isAdded == false)
+                    songList.add(song);
+                adapter.filterList(songList);
+                Toast.makeText(getApplicationContext(), "CAN YOU PLEASE WORK", Toast.LENGTH_SHORT).show();
+                //Log.d(TAG, "Value is: " + value);*/
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+
     /*private void prepareLibraryList() {
         Song theWayYouLookTonight = new Song("S1001", "The Way You Look Tonight", "Michael Buble",
                 "a5b8972e764025020625bbf9c1c2bbb06e394a60?cid=2afe87a64b0042dabf51f37318616965",
@@ -127,9 +217,9 @@ public class LibraryActivity extends AppCompatActivity {
     }*/
 
 
-    /*@Override
+    @Override
     protected void onDestroy() {
         songList.clear();
         super.onDestroy();
-    }*/
+    }
 }

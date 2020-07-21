@@ -1,10 +1,17 @@
 package sg.edu.tp.whisper;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class SongCollection {
 
     SongCollection() {
+
         prepareTopTrackList();
         prepareEdSheeranSongList();
         prepareTheCabSongs();
@@ -23,19 +30,19 @@ public class SongCollection {
     }
     private void prepareTopTrackList() {
 
-        Song photograph = new Song("S1003", "Photograph", "Ed Sheeran",
+        Song photograph = new Song("E1001", "Photograph", "Ed Sheeran",
                 "097c7b735ceb410943cbd507a6e1dfda272fd8a8?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.photograph);
 
-        Song endlessly = new Song("S1004", "Endlessly", "The Cab",
+        Song endlessly = new Song("C1001", "Endlessly", "The Cab",
                 "99e455921cf33b4242b463f778111cad251c1937?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.endlessly);
 
-        Song lettingGo = new Song("S1006", "Letting Go", "One OK Rock",
+        Song lettingGo = new Song("O1001", "Letting Go", "One OK Rock",
                 "1cf8d48884a0ce9cbf21bba281a0a8e2b43f0bb2?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.letting_go);
 
-        Song theScientist = new Song("S1007", "The Scientist", "Coldplay",
+        Song theScientist = new Song("P1007", "The Scientist", "Coldplay",
                 "95cb9df1b056d759920b5e85ad7f9aff0a390671?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.the_scientist);
 
@@ -228,25 +235,25 @@ public class SongCollection {
 
     ArrayList<Song> getColdPlaySongs() {return theCabSongs; }
     private void prepareColdPlaySongs() {
-        Song theScientist = new Song("C1001", "The Scientist", "Coldplay",
+        Song theScientist = new Song("P1001", "The Scientist", "Coldplay",
                 "95cb9df1b056d759920b5e85ad7f9aff0a390671?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
-        Song amsterdam = new Song("C1002", "Amsterdam", "Coldplay",
+        Song amsterdam = new Song("P1002", "Amsterdam", "Coldplay",
                 "c48e6d3099d3b6114fdb00ad5da729fe20ba7c16?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
-        Song clocks = new Song("C1003", "Clocks", "Coldplay",
+        Song clocks = new Song("P1003", "Clocks", "Coldplay",
                 "24c7fe858b234e3cb21872cd03ab44b669163fbb?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
-        Song daylight = new Song("C1004", "Daylight", "Coldplay",
+        Song daylight = new Song("P1004", "Daylight", "Coldplay",
                 "4f024aa4b08ed605c8ce05579d4d0c7629918a00?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
-        Song greenEyes = new Song("C1005", "Green Eyes", "Coldplay",
+        Song greenEyes = new Song("P1005", "Green Eyes", "Coldplay",
                 "31819a056e48b71d05c54b7745f1256f3ffd927a?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
-        Song aWhisper = new Song("C1006", "A Whisper", "Coldplay",
+        Song aWhisper = new Song("P1006", "A Whisper", "Coldplay",
                 "2871daf282eff729ec13638a79b60351c644d497?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
-        Song inMyPlace = new Song("C1007", "In My Place", "Coldplay",
+        Song inMyPlace = new Song("P1007", "In My Place", "Coldplay",
                 "e152576c5affbc6d08bb5b67ff0f4d18e29914ce?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.the_scientist);
 

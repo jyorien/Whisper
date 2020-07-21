@@ -10,12 +10,19 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -508,51 +515,108 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
     };
 
+
+    Boolean isAdded = false;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef,secRef;
+    Song tempSong = null;
     public void addToLibraryBtn(View view) {
         //store the current song object
-        Boolean isAdded = false;
-        Song song = null;
+
+
         //get the current song object
         for(int i = 0; i < songList.size(); i++) {
             String tempSongId = songList.get(i).getId();
             if (tempSongId.equals(songId)) {
-                song = songList.get(i);
+                tempSong = songList.get(i);
                 break;
             }
         }
+        myRef = database.getReference(tempSong.getId());
+        secRef = database.getReference();
 
-        for (int i = 0; i < SongCollection.librarySongs.size(); i++){
+
+        secRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+
+                    if (dataSnapshot.hasChild(songId)) {
+                        isAdded = true;
+                        myRef.removeValue();
+                        Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
+                    }
+
+                if (isAdded == false) {
+                    //SongCollection.librarySongs.add(song);
+                    //Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
+
+
+                    String image = Integer.toString(tempSong.getImageIcon());
+                    String addSong = tempSong.getId() + "," + tempSong.getTitle() + "," + tempSong.getArtiste() + "," + tempSong.getFileLink() + "," + image;
+                    myRef.setValue(addSong);
+                    Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
+
+                    // Read from the database
+            /*myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    //String value = dataSnapshot.getValue(String.class);
+                    //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
+                    //Log.d(TAG, "Value is: " + value);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                }
+            });*/
+
+                }
+                isAdded = false;
+
+                //String value = dataSnapshot.getValue(String.class);
+                //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
+                //Log.d(TAG, "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+
+
+        });
+        /*for (int i = 0; i < SongCollection.librarySongs.size(); i++){
             if (song.getId().equals(SongCollection.librarySongs.get(i).getId())) {
                 isAdded = true;
-                SongCollection.librarySongs.remove(i);
+                //SongCollection.librarySongs.remove(i);
+                myRef.child(song.getId()).removeValue();
                 Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
                 break;
             }
-        }
-        if (isAdded == false) {
-            SongCollection.librarySongs.add(song);
-            Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
-        }
+        }*/
+
+
 
         //LibraryActivity.songList.add(song);
-
-        /*SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson = new Gson();
-        Set<String> set = new HashSet<Song>;
-        set.addAll(songList);
-        //String json = gson.toJson(songList);
-        prefsEditor.putStringSet("songList", set);
-        prefsEditor.commit();*/
-
 
         //songList.add(song);
 
 
     }
 
+
+
+
+
     @Override
     public void onBackPressed() {
         if (isLibraryActivity == true) {
+            stopActivities();
             startActivity(new Intent(getApplication(), LibraryActivity.class));
         }
         else {

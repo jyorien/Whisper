@@ -9,7 +9,6 @@ public class Song implements Serializable {
     private String title;
     private String artiste;
     private String fileLink;
-    private double songLength;
     private ArrayList<Song> songList;
 
     public Song(String id, String title, String artiste, String fileLink, int imageIcon) {
