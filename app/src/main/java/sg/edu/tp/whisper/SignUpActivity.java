@@ -91,11 +91,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     progressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
                         user = mAuth.getCurrentUser();
                         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(SignUpActivity.this,LoginActivity.class );
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
@@ -115,12 +115,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             });
 
         }
-
-
-
-
-
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -129,6 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btnSignUp:
                 registerUser();
+
                 break;
 
     }

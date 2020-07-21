@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.btnSignUpPage).setOnClickListener(this);
         findViewById(R.id.btnLogin).setOnClickListener(this);
+        findViewById(R.id.btnResetPasswordPage).setOnClickListener(this);
     }
 
     private void userLogin() {
@@ -107,6 +108,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btnSignUpPage:
                 startActivity(new Intent(this, SignUpActivity.class));
+                break;
+            case R.id.btnResetPasswordPage:
+                startActivity(new Intent(this, ResetPasswordActivity.class));
                 break;
 
 

@@ -4,13 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-//import com.google.gson.Gson;
+
 
 
 public class MusicPlayerActivity extends AppCompatActivity {
@@ -43,14 +41,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
     ImageButton shuffleButton = null;
     TextView txtCurrentTime = null;
     Boolean isLibraryActivity = false;
-    //SongCollection songCollection = new SongCollection();
-    //SharedPreferences mPrefs;
 
     private SeekBar seekBar = null;
     private Handler handler;
 
     int img = 0;
-
     private String artisteName = "";
     private String songId = "";
     private String fileLink = "";
@@ -61,12 +56,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private MediaPlayer player = null;
     private int musicPosition = 0; // to store position of the song when paused
 
+    Boolean isAdded = false;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef,secRef;
+    Song tempSong = null;
+    ImageButton addToLibraryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
-         //mPrefs = getPreferences(MusicPlayerActivity.this.MODE_PRIVATE);
+
 
         seekBar = findViewById(R.id.seekBar);
         handler = new Handler();
@@ -166,8 +166,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
             isLibraryActivity = extras.getBoolean("isLibraryActivity");
             url = BASE_URL + fileLink;
         }
-
-
     }
 
     private void displaySong(String title, String artisteName, int image) {
@@ -183,8 +181,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     public void preparePlayer() {
         player.reset();
         try {
-
-            //player = MediaPlayer.create(this, Uri.parse(url))
             player.setAudioAttributes(
                     new AudioAttributes
                             .Builder()
@@ -197,16 +193,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
     }
 
-    /*private void gracefullyStopWhenMusicEnds() {
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                stopActivities();
-                playNext();
-
-            }
-        });
-    }*/
 
     private void stopActivities() {
         if (player != null) {
@@ -516,12 +502,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
     };
 
 
-    Boolean isAdded = false;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef,secRef;
-    Song tempSong = null;
+
     public void addToLibraryBtn(View view) {
-        //store the current song object
+        addToLibraryBtn  = findViewById(R.id.addToLibraryButton);
 
 
         //get the current song object
@@ -549,14 +532,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     }
 
                 if (isAdded == false) {
-                    //SongCollection.librarySongs.add(song);
-                    //Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
-
-
                     String image = Integer.toString(tempSong.getImageIcon());
                     String addSong = tempSong.getId() + "," + tempSong.getTitle() + "," + tempSong.getArtiste() + "," + tempSong.getFileLink() + "," + image;
                     myRef.setValue(addSong);
                     Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
+
 
                     // Read from the database
             /*myRef.addValueEventListener(new ValueEventListener() {
@@ -576,6 +556,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
             });*/
 
                 }
+                if (isAdded == false) {
+                    addToLibraryBtn.setBackgroundResource(R.drawable.remove_button);
+                }
+                if (isAdded == true) {
+                    addToLibraryBtn.setBackgroundResource(R.drawable.add_button);
+                }
                 isAdded = false;
 
                 //String value = dataSnapshot.getValue(String.class);
@@ -590,23 +576,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
 
         });
-        /*for (int i = 0; i < SongCollection.librarySongs.size(); i++){
-            if (song.getId().equals(SongCollection.librarySongs.get(i).getId())) {
-                isAdded = true;
-                //SongCollection.librarySongs.remove(i);
-                myRef.child(song.getId()).removeValue();
-                Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
-                break;
-            }
-        }*/
-
-
-
-        //LibraryActivity.songList.add(song);
-
-        //songList.add(song);
-
-
     }
 
 

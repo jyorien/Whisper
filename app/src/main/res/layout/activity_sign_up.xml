@@ -76,7 +76,7 @@
         android:id="@+id/btnLoginPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have an account? Login here!"
+        android:text="Log in here!"
         android:textAlignment="center"
         android:textColor="@color/textColor"
         android:textSize="18sp"
