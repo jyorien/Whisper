@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -47,15 +49,17 @@ public class SearchActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.Home:
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.Library:
                         intent = new Intent(getApplicationContext(), LibraryActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
                 }
@@ -134,12 +138,23 @@ public class SearchActivity extends AppCompatActivity {
         };
     }
 
-    // Make the Back button exit the entire app
+    boolean doublePress = false;
+    // double tap to exit
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
 }

@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -62,10 +63,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
     Song tempSong = null;
     ImageButton addToLibraryBtn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         seekBar = findViewById(R.id.seekBar);
@@ -578,20 +581,39 @@ public class MusicPlayerActivity extends AppCompatActivity {
         });
     }
 
-
-
-
-
-    @Override
-    public void onBackPressed() {
+    // for the back button in the title bar
+    public boolean onOptionsItemSelected(MenuItem item){
         if (isLibraryActivity == true) {
             stopActivities();
             startActivity(new Intent(getApplication(), LibraryActivity.class));
+            finish();
         }
         else {
-            super.onBackPressed();
+            finish();
         }
 
+        return true;
+    }
+
+
+    boolean doublePress = false;
+    // double tap to exit
+    @Override
+    public void onBackPressed() {
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
 
 }

@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,7 @@ public class ArtisteSongsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artiste_songs);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         retrieveData();
         getSupportActionBar().setTitle(songList.get(0).getArtiste());
         setAdapter();
@@ -63,6 +67,32 @@ public class ArtisteSongsActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    // for the back button in the title bar
+    public boolean onOptionsItemSelected(MenuItem item){
+        finish();
+        return true;
+    }
+
+    boolean doublePress = false;
+    // double tap to exit
+    @Override
+    public void onBackPressed() {
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -87,9 +88,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
 
                     else {
-                        Intent intent = new Intent(LoginActivity.this,WelcomeScreen.class );
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Intent intent = new Intent(LoginActivity.this,MainActivity.class );
+                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                     }
 
                 }
@@ -117,12 +119,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
+    boolean doublePress = false;
+    // double tap to exit
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
 
 }

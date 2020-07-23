@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 //import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,10 +30,10 @@ import java.util.ArrayList;
 
 public class LibraryActivity extends AppCompatActivity {
 
-    private static final String TAG = "LibraryActivity";
+
     private RecyclerView trackList;
     //private SongCollection songCollection = new SongCollection();
-    private static ArrayList<Song> songList = new ArrayList<>();
+    private ArrayList<Song> songList = new ArrayList<>();
     private Boolean isLibraryActivity = true;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference();
@@ -69,16 +70,17 @@ public class LibraryActivity extends AppCompatActivity {
                     case R.id.Search:
                         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                         finish();
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
 
                     case R.id.Home:
                         intent = new Intent(getApplicationContext(), MainActivity.class);
-                        finish();
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(0,0);
                         return true;
                 }
@@ -115,20 +117,22 @@ public class LibraryActivity extends AppCompatActivity {
                 intent.putExtra("songId",songList.get(position).getId());
                 intent.putExtra("isLibraryActivity", isLibraryActivity);
 
-                finish();
+
                 startActivity(intent);
+                finish();
 
             }
         };
     }
     // Make the Back button exit the entire app
-    @Override
+    /*@Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
+
+    }*/
 
     private void prepareLibrarySongs() {
 
@@ -217,9 +221,29 @@ public class LibraryActivity extends AppCompatActivity {
     }*/
 
 
-    @Override
+    /*@Override
     protected void onDestroy() {
         songList.clear();
         super.onDestroy();
+    }*/
+
+    boolean doublePress = false;
+    // double tap to exit
+    @Override
+    public void onBackPressed() {
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
 }

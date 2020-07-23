@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Settings");
 
         username = findViewById(R.id.username);
@@ -39,8 +42,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()){
             case R.id.btnLogOut:
                 FirebaseAuth.getInstance().signOut();
-                finish();
                 startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                finish();
                 break;
 
             case R.id.btnUpdate:
@@ -58,13 +61,33 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         Toast.makeText(getApplicationContext(), "Username updated to " + updatedName + "!",Toast.LENGTH_SHORT).show();
 
     }
+    // for the back button in the title bar
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent = new Intent(this, WelcomeScreen.class);
+        startActivity(intent);
 
-    // Make the Back button exit the entire app
+        return true;
+    }
+
+    boolean doublePress = false;
+    // double tap to exit
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
+
+
 }

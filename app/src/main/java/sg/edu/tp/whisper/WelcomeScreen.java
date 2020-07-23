@@ -12,15 +12,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class WelcomeScreen extends AppCompatActivity {
-    FirebaseUser user;
-    String name;
-    TextView userEmail;
-
+    //FirebaseUser user;
+    //String name;
+    //TextView userEmail;
+// this was made because the horizontal recyclerview wouldn't load
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        /*user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             if (user.getDisplayName() != null) {
                 name = user.getDisplayName();
@@ -31,12 +31,12 @@ public class WelcomeScreen extends AppCompatActivity {
 
         }
         userEmail = findViewById(R.id.userEmail);
-        userEmail.append(name + "!");
+        userEmail.append(name + "!");*/
         getSupportActionBar().hide();
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {
                 Intent intent = new Intent(WelcomeScreen.this, MainActivity.class);
                 startActivity(intent);
-                finish(); } }, 500);
+                finish(); } }, 50);
     }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -42,7 +43,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
 
         switch (v.getId()) {
             case R.id.btnLoginPage:
-                startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 break;
 
             case R.id.btnResetPassword:
@@ -58,10 +59,31 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ResetPasswordActivity.this,LoginActivity.class );
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                finish();
 
             }
         });
+    }
+
+    boolean doublePress = false;
+    // double tap to exit
+    @Override
+    public void onBackPressed() {
+        if (doublePress) {
+            finishAffinity();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
     }
 }
