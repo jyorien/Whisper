@@ -16,6 +16,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,10 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private HorizontalAdapter.RecyclerViewClickListener listener2;
     FirebaseUser user;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = FirebaseAuth.getInstance().getCurrentUser();
+
         String name;
         if (user.getDisplayName() != null) {
             name = user.getDisplayName();
@@ -82,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         /*FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Song");
         // Read from the database
@@ -101,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 //Log.w(TAG, "Failed to read value.", error.toException());
             }
         });*/
+
     }
 
     // setting the recyclerview adapter
@@ -130,6 +136,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
 
+                /*Intent intent = new Intent(getApplicationContext(), MusicService.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("songList", songList);
+                intent.putExtras(bundle);
+
+                intent.putExtra("songName", songList.get(position).getTitle());
+                intent.putExtra("artisteID", songList.get(position).getArtiste());
+                intent.putExtra("coverArt",songList.get(position).getImageIcon());
+                intent.putExtra("fileLink", songList.get(position).getFileLink());
+                intent.putExtra("songId",songList.get(position).getId());
+                startService(intent);*/
+
+
 
                 Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
 
@@ -145,19 +164,18 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(intent);
 
+
             }
         };
 
         listener2 = new HorizontalAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                //Toast.makeText(MainActivity.this, "pls work", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), ArtisteSongsActivity.class);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songList", artisteList.get(position).getSongList());
                 intent.putExtras(bundle);
-
 
                 startActivity(intent);
 
@@ -205,4 +223,5 @@ boolean doublePress = false;
             }
         }, 2000);
     }
+
 }

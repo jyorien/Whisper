@@ -3,12 +3,16 @@ package sg.edu.tp.whisper;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -34,27 +38,28 @@ import java.util.Random;
 
 public class MusicPlayerActivity extends AppCompatActivity {
 
-    ArrayList<Song> songList = new ArrayList<>();
+
     private boolean isShuffle = false;
     private boolean isLooping = false;
     ImageButton playPauseBtn = null;
     ImageButton repeatButton = null;
     ImageButton shuffleButton = null;
     TextView txtCurrentTime = null;
-    Boolean isLibraryActivity = false;
+
 
     private SeekBar seekBar = null;
-    private Handler handler;
+    private Handler handler = new Handler();
 
+    ArrayList<Song> songList = new ArrayList<>();
     int img = 0;
     private String artisteName = "";
     private String songId = "";
     private String fileLink = "";
     private String url = "";
     private String songTitle = "";
+    Boolean isLibraryActivity = false;
     private final String BASE_URL = "https://p.scdn.co/mp3-preview/";
 
-    private MediaPlayer player = null;
     private int musicPosition = 0; // to store position of the song when paused
 
     Boolean isAdded = false;
@@ -63,47 +68,51 @@ public class MusicPlayerActivity extends AppCompatActivity {
     Song tempSong = null;
     ImageButton addToLibraryBtn;
 
-
+    MusicService mService;
+    boolean mBound = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         seekBar = findViewById(R.id.seekBar);
-        handler = new Handler();
+
         txtCurrentTime = findViewById(R.id.txtCurrentTime);
 
         // On create, media player starts playing audio
         retrieveData();
         displaySong(songTitle, artisteName, img);
+
         playPauseBtn = findViewById(R.id.playPauseButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
-        player = new MediaPlayer();
-        preparePlayer();
+        //player = MusicService.player;
+        startMusicService();
+        updateSeekBar();
+        //seekBar.setMax(mService.getMusicDuration());
+        //preparePlayer();
 
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        /*player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer player) {
-                seekBar.setMax(player.getDuration());
-                player.start();
+                seekBar.setMax(mService.getMusicDuration());
+                //player.start();
                 setTitle("Now playing: " + songTitle + " by " + artisteName);
                 playPauseBtn.setBackgroundResource(R.drawable.fpause);
             }
-        });
+        });*/
         // seekbar responds to user tap and progresses as the song plays
-        updateSeekBar();
+        //updateSeekBar();
         seekBar.setOnSeekBarChangeListener(seekBarOnSeekChangeListener);
 
         /*if loop enabled, replay the same song.
         else if shuffle is enabled, play a random song next.
         else, auto play to the next song on the list. */
-        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        /*player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 if ( isLooping == true) {
-                    preparePlayer();
+                    startMusicService();
                     player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer player) {
@@ -121,31 +130,20 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
                 }
             }
-        });
-
-
-
+        });*/
     }
+
 
     public void playOrPauseBtn(View view) {
         playPauseBtn = findViewById(R.id.playPauseButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
-          /*if (player == null)
-              preparePlayer();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                player.start();
-                setTitle("Now playing: " + songTitle + " by " + artisteName);
-                playPauseBtn.setBackgroundResource(R.drawable.fpause);
 
-            }
-        }); */
-        if (!player.isPlaying()) {
+        if (!mService.isMusicPlaying()) {
             if (musicPosition > 0) {
-                player.seekTo(musicPosition);
-                player.start();
-                updateSeekBar();
+                seekBar.setProgress(musicPosition);
+                mService.playMusic();
+                //player.start();
+                //updateSeekBar();
             }
         } else {
             pauseMusic();
@@ -168,8 +166,68 @@ public class MusicPlayerActivity extends AppCompatActivity {
             fileLink = extras.getString("fileLink");
             isLibraryActivity = extras.getBoolean("isLibraryActivity");
             url = BASE_URL + fileLink;
+
         }
     }
+
+    private void startMusicService() {
+        Intent intent = new Intent(getApplicationContext(), MusicService.class);
+        intent.putExtra("url", url);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("songList", songList);
+        intent.putExtras(bundle);
+
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        startService(intent);
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            MusicService.LocalBinder binder = (MusicService.LocalBinder) iBinder;
+            mService = binder.getService();
+            mBound = true;
+            seekBar.setMax(mService.getMusicDuration());
+            Toast.makeText(MusicPlayerActivity.this, "bound", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBound = false;
+            Toast.makeText(MusicPlayerActivity.this, "unbound", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void updateSeekBar() {
+        /*if (player == null) {
+            seekBar.setProgress(0);
+
+        }
+        else {
+            seekBar.setProgress(player.getCurrentPosition());
+            txtCurrentTime.setText(milliSecondsToTimer(player.getCurrentPosition()));
+            handler.postDelayed(runnable, 100);
+        }*/
+        if (mBound == true) {
+            //Toast.makeText(mService, "PLS WORK", Toast.LENGTH_SHORT).show();
+            txtCurrentTime.setText(milliSecondsToTimer(mService.getMusicPosition()));
+            seekBar.setProgress(mService.getMusicPosition());
+        }
+        handler.postDelayed(runnable, 100);
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mBound == true) {
+                txtCurrentTime.setText(milliSecondsToTimer(mService.getMusicPosition()));
+                seekBar.setProgress(mService.getMusicPosition());
+                handler.postDelayed(runnable,100);
+            };
+
+        }
+    };
 
     private void displaySong(String title, String artisteName, int image) {
         TextView songName = findViewById(R.id.songName);
@@ -181,7 +239,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     }
     // brings player to prepared state from idle > initialised > prepared
-    public void preparePlayer() {
+    /*public void preparePlayer() {
         player.reset();
         try {
             player.setAudioAttributes(
@@ -194,10 +252,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
         } catch (IllegalArgumentException | IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
-    private void stopActivities() {
+    /*private void stopActivities() {
         if (player != null) {
             playPauseBtn.setBackgroundResource(R.drawable.fplay);
             musicPosition = 0;
@@ -208,11 +266,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
             setTitle("");
         }
 
-    }
+    }*/
 
     public void pauseMusic() {
-        player.pause();
-        musicPosition = player.getCurrentPosition();
+        mService.pauseMusic();
+        musicPosition = mService.getMusicPosition();
         playPauseBtn.setBackgroundResource(R.drawable.fplay);
     }
 
@@ -226,40 +284,25 @@ public class MusicPlayerActivity extends AppCompatActivity {
             img = nextSong.getImageIcon();
             url = BASE_URL + fileLink;
             displaySong(songTitle, artisteName, img);
-            //stopActivities();
-            /*preparePlayer();
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer player) {
-                    seekBar.setMax(player.getDuration());
-                    player.start();
-                    setTitle("Now playing: " + songTitle + " by " + artisteName);
-                    playPauseBtn.setBackgroundResource(R.drawable.fpause);
-
-                }
-            });*/
         }
         else {
             url = BASE_URL + fileLink;
             displaySong(songTitle, artisteName, img);
-
         }
-        preparePlayer();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                seekBar.setMax(player.getDuration());
-                player.start();
-                setTitle("Now playing: " + songTitle + " by " + artisteName);
-                playPauseBtn.setBackgroundResource(R.drawable.fpause);
 
-            }
-        });
+        startMusicService();
+
+        seekBar.setMax(mService.getMusicDuration());
+        mService.playMusic();
+        setTitle("Now playing: " + songTitle + " by " + artisteName);
+        playPauseBtn.setBackgroundResource(R.drawable.fpause);
+
+
+
 
     }
     public Song getNextSong(String currentSongId) {
         Song song = null;
-
         if (songList == null) {
             return song;
         }
@@ -310,16 +353,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         }
         //stopActivities();
-        preparePlayer();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                player.start();
-                setTitle("Now playing: " + songTitle + " by " + artisteName);
-                playPauseBtn.setBackgroundResource(R.drawable.fpause);
+        startMusicService();
+        mService.playMusic();
+        setTitle("Now playing: " + songTitle + " by " + artisteName);
+        playPauseBtn.setBackgroundResource(R.drawable.fpause);
 
-            }
-        });
+
 
     }
 
@@ -370,7 +409,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        stopActivities();
+        //stopActivities();
         super.onDestroy();
 
     }
@@ -423,38 +462,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
             displaySong(songTitle, artisteName, img);
         }
         //stopActivities();
-        preparePlayer();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                player.start();
-                setTitle("Now playing: " + songTitle + " by " + artisteName);
-                playPauseBtn.setBackgroundResource(R.drawable.fpause);
-
-            }
-        });
-
+        startMusicService();
+        mService.playMusic();
+        setTitle("Now playing: " + songTitle + " by " + artisteName);
+        playPauseBtn.setBackgroundResource(R.drawable.fpause);
 
     }
 
-    private void updateSeekBar() {
-        if (player == null) {
-            seekBar.setProgress(0);
-
-        }
-        else {
-            seekBar.setProgress(player.getCurrentPosition());
-            txtCurrentTime.setText(milliSecondsToTimer(player.getCurrentPosition()));
-            handler.postDelayed(runnable, 50);
-        }
-    }
-
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            updateSeekBar();
-        }
-    };
 
     private String milliSecondsToTimer(long milliseconds) {
         String finalTimerString = "";
@@ -497,7 +511,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
             // TODO Auto-generated method stub
 
             if (fromUser) {
-                player.seekTo(progress);
+                //player.seekTo(progress);
+                mService.seekToPos(progress);
                 seekBar.setProgress(progress);
             }
 
@@ -560,16 +575,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
                 }
                 if (isAdded == false) {
-                    addToLibraryBtn.setBackgroundResource(R.drawable.remove_button);
+                    //addToLibraryBtn.setBackgroundResource(R.drawable.remove_button);
                 }
                 if (isAdded == true) {
                     addToLibraryBtn.setBackgroundResource(R.drawable.add_button);
                 }
                 isAdded = false;
 
-                //String value = dataSnapshot.getValue(String.class);
-                //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
-                //Log.d(TAG, "Value is: " + value);
             }
 
             @Override
@@ -584,7 +596,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     // for the back button in the title bar
     public boolean onOptionsItemSelected(MenuItem item){
         if (isLibraryActivity == true) {
-            stopActivities();
+            //stopActivities();
             startActivity(new Intent(getApplication(), LibraryActivity.class));
             finish();
         }

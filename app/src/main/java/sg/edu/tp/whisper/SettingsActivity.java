@@ -63,8 +63,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
     // for the back button in the title bar
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent intent = new Intent(this, WelcomeScreen.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
 
         return true;
     }
