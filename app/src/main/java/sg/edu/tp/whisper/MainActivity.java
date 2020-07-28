@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
-                intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
             }
         });

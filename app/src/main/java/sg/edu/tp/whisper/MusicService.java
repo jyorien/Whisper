@@ -26,6 +26,7 @@ public class MusicService extends Service {
     private String artisteName = "";
     private String songId = "";
     private String songTitle = "";
+    private String fileLink = "";
     ArrayList<Song> songList = new ArrayList<>();
 
     private final IBinder binder = new LocalBinder();
@@ -39,7 +40,7 @@ public class MusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this, "Service created", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Service created", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -47,7 +48,8 @@ public class MusicService extends Service {
         //Toast.makeText(this, "Service started", Toast.LENGTH_LONG).show();
         //return super.onStartCommand(intent, flags, startId);
         //url = intent.getStringExtra("url");
-        url = "https://p.scdn.co/mp3-preview/" + intent.getStringExtra("fileLink");
+        fileLink = intent.getStringExtra("fileLink");
+        url = "https://p.scdn.co/mp3-preview/" + fileLink;
         img = intent.getIntExtra("coverArt",0);
         songList = (ArrayList<Song>) intent.getSerializableExtra("songList");
         songTitle = intent.getStringExtra("songName");
@@ -69,7 +71,7 @@ public class MusicService extends Service {
 
             }
         });
-
+        Toast.makeText(this, "Now playing: " + songTitle + " by " + artisteName, Toast.LENGTH_SHORT).show();
         return Service.START_NOT_STICKY;
     }
 
@@ -273,7 +275,6 @@ public class MusicService extends Service {
         return player.isPlaying();
     }
 
-    String getId() { return songId; }
     int getCoverArt() {
         return img;
     }
@@ -282,5 +283,14 @@ public class MusicService extends Service {
     }
     String getSongTitle() {
         return songTitle;
+    }
+    String getSongId() {
+        return songId;
+    }
+    ArrayList<Song> getSongList() {
+        return songList;
+    }
+    String getFileLink() {
+        return fileLink;
     }
 }

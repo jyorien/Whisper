@@ -185,9 +185,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
             MusicService.LocalBinder binder = (MusicService.LocalBinder) iBinder;
             mService = binder.getService();
             mBound = true;
+
             artisteName = mService.getArtiste();
             songTitle = mService.getSongTitle();
             img = mService.getCoverArt();
+            songList = mService.getSongList();
+            songId = mService.getSongId();
+            fileLink = mService.getFileLink();
             displaySong(songTitle, artisteName, img);
             seekBar.setMax(mService.getMusicDuration());
             Toast.makeText(MusicPlayerActivity.this, "bound", Toast.LENGTH_SHORT).show();
@@ -416,12 +420,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         return song;
     }
 
-    @Override
-    protected void onDestroy() {
-        //stopActivities();
-        super.onDestroy();
 
-    }
 
     public void repeatSongBtn(View view) {
         repeatButton = findViewById(R.id.repeatButton);
@@ -630,6 +629,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             finish();
         }
         else {
+            unbindService(mConnection);
             finish();
         }
 
