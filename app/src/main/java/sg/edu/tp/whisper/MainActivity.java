@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v, int position) {
 
-                /*Intent intent = new Intent(getApplicationContext(), MusicService.class);
+                Intent intent = new Intent(getApplicationContext(), MusicService.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songList", songList);
                 intent.putExtras(bundle);
@@ -154,11 +154,11 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("coverArt",songList.get(position).getImageIcon());
                 intent.putExtra("fileLink", songList.get(position).getFileLink());
                 intent.putExtra("songId",songList.get(position).getId());
-                startService(intent);*/
+                startService(intent);
 
 
 
-                Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
+                /*Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songList", songList);
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("fileLink", songList.get(position).getFileLink());
                 intent.putExtra("songId",songList.get(position).getId());
 
-                startActivity(intent);
+                startActivity(intent);*/
 
 
             }

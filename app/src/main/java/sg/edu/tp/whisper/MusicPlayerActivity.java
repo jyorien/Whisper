@@ -82,13 +82,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
         txtCurrentTime = findViewById(R.id.txtCurrentTime);
 
         // On create, media player starts playing audio
-        retrieveData();
+        //retrieveData();
+        startMusicService();
         displaySong(songTitle, artisteName, img);
 
         playPauseBtn = findViewById(R.id.playPauseButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
         //player = MusicService.player;
-        startMusicService();
         updateSeekBar();
         //seekBar.setMax(mService.getMusicDuration());
         //preparePlayer();
@@ -173,10 +173,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     private void startMusicService() {
         Intent intent = new Intent(getApplicationContext(), MusicService.class);
-        intent.putExtra("url", url);
+        //intent.putExtra("url", url);
 
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        startService(intent);
+        //startService(intent);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -185,6 +185,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
             MusicService.LocalBinder binder = (MusicService.LocalBinder) iBinder;
             mService = binder.getService();
             mBound = true;
+            artisteName = mService.getArtiste();
+            songTitle = mService.getSongTitle();
+            img = mService.getCoverArt();
+            displaySong(songTitle, artisteName, img);
             seekBar.setMax(mService.getMusicDuration());
             Toast.makeText(MusicPlayerActivity.this, "bound", Toast.LENGTH_SHORT).show();
         }
@@ -323,10 +327,18 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     public void nextBtn(View view) {
         if (isShuffle == true) {
-            shuffleSong();
+            mService.shuffleSong();
+            artisteName = mService.getArtiste();
+            songTitle = mService.getSongTitle();
+            img = mService.getCoverArt();
+            displaySong(songTitle, artisteName, img);
         }
         else{
-            playNext();
+            mService.playNext();
+            artisteName = mService.getArtiste();
+            songTitle = mService.getSongTitle();
+            img = mService.getCoverArt();
+            displaySong(songTitle, artisteName, img);
         }
 
 
@@ -383,10 +395,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     public void prevBtn(View view) {
         if (isShuffle == true) {
-            shuffleSong();
+            mService.shuffleSong();
         }
         else {
-            playPrev();
+            mService.playPrev();
         }
 
     }
@@ -515,13 +527,20 @@ public class MusicPlayerActivity extends AppCompatActivity {
             if (progress == seekBar.getMax()) {
                 //playNext();
                 if (isLooping == true) {
-                    startMusicService();
+                    //startMusicService();
+                    mService.loopSong();
                 }
                 else if (isShuffle == true)
-                    shuffleSong();
-                else
-                    playNext();
+                    mService.shuffleSong();
+                else {
+                    mService.playNext(); }
 
+            }
+            if (progress == 0) {
+                artisteName = mService.getArtiste();
+                songTitle = mService.getSongTitle();
+                img = mService.getCoverArt();
+                displaySong(songTitle, artisteName, img);
             }
 
 
