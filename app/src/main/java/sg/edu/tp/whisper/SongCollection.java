@@ -46,10 +46,10 @@ public class SongCollection {
                 "95cb9df1b056d759920b5e85ad7f9aff0a390671?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.the_scientist);
 
-        photograph.setSongList(edSheeranSongs);
-        endlessly.setSongList(theCabSongs);
-        lettingGo.setSongList(oneOkRockSongs);
-        theScientist.setSongList(coldPlaySongs);
+        photograph.setSongList(topSongs);
+        endlessly.setSongList(topSongs);
+        lettingGo.setSongList(topSongs);
+        theScientist.setSongList(topSongs);
 
         topSongs.add(photograph);
         topSongs.add(endlessly);

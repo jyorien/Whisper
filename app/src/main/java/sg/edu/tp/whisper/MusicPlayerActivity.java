@@ -70,6 +70,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     MusicService mService;
     boolean mBound = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,10 +174,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private void startMusicService() {
         Intent intent = new Intent(getApplicationContext(), MusicService.class);
         intent.putExtra("url", url);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("songList", songList);
-        intent.putExtras(bundle);
 
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         startService(intent);
@@ -515,6 +512,19 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 mService.seekToPos(progress);
                 seekBar.setProgress(progress);
             }
+            if (progress == seekBar.getMax()) {
+                //playNext();
+                if (isLooping == true) {
+                    startMusicService();
+                }
+                else if (isShuffle == true)
+                    shuffleSong();
+                else
+                    playNext();
+
+            }
+
+
 
         }
     };

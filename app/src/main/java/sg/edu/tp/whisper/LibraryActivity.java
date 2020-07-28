@@ -69,7 +69,6 @@ public class LibraryActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.Search:
                         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
-                        finish();
                         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();

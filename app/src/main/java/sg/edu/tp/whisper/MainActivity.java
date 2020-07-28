@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private HorizontalAdapter.RecyclerViewClickListener listener;
     private HorizontalAdapter.RecyclerViewClickListener listener2;
     FirebaseUser user;
-
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Welcome home, " + name + "!");
         setContentView(R.layout.activity_main);
+        fab = findViewById(R.id.fab);
 
 
         setAdapter();
@@ -85,7 +86,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
+                intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+        });
 
         /*FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Song");
