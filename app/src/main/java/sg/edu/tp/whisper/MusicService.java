@@ -33,6 +33,7 @@ public class MusicService extends Service {
 
     public static MediaPlayer player = new MediaPlayer();
 
+    private boolean isLoop = false;
 
     public MusicService() {
     }
@@ -66,7 +67,9 @@ public class MusicService extends Service {
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                playNext();
+                if (!player.isLooping())
+                    playNext();
+
 
             }
         });
@@ -198,14 +201,18 @@ public class MusicService extends Service {
         song = songList.get(randInt);
         return song;
     }
-    public void loopSong() {
-        preparePlayer();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                player.start();
-            }
-        });
+
+
+    public void loopSong(boolean bool) {
+        /*if (!isLoop)
+            isLoop = true;
+        else
+            isLoop = false;*/
+        if (bool)
+            player.setLooping(true);
+        else if (!bool)
+            player.setLooping(false);
+
 
     }
 
