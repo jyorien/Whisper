@@ -195,6 +195,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
             displaySong(songTitle, artisteName, img);
             seekBar.setMax(mService.getMusicDuration());
             Toast.makeText(MusicPlayerActivity.this, "bound", Toast.LENGTH_SHORT).show();
+            if (mService.isMusicPlaying() == false) {
+                seekBar.setProgress(mService.getMusicPosition());
+                pauseMusic();
+            }
         }
 
         @Override

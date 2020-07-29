@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -30,13 +31,14 @@ public class SearchActivity extends AppCompatActivity {
     private TracksAdapter.RecyclerViewClickListener listener;
     TracksAdapter adapter;
 
-
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getSupportActionBar().setTitle("Search");
+        fab = findViewById(R.id.fab);
         setAdapter();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);

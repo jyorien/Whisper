@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 //import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,12 +45,27 @@ public class LibraryActivity extends AppCompatActivity {
     TracksAdapter adapter;
     private TracksAdapter.RecyclerViewClickListener listener;
 
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
         getSupportActionBar().setTitle("Library");
         prepareLibrarySongs();
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isServiceRunning(MusicService.class))  {
+                    Intent intent = new Intent(LibraryActivity.this, MusicPlayerActivity.class);
+                    startActivity(intent); }
+                else {
+                    Toast.makeText(LibraryActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         //songList = LibraryList.getLibraryList().songList;
         //songList = SongCollection.librarySongs;
         //prepareLibraryList();
@@ -225,6 +243,15 @@ public class LibraryActivity extends AppCompatActivity {
         songList.clear();
         super.onDestroy();
     }*/
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     boolean doublePress = false;
     // double tap to exit

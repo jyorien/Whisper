@@ -55,7 +55,6 @@ public class MusicService extends Service {
         songTitle = intent.getStringExtra("songName");
         songId = intent.getStringExtra("songId");
         artisteName = intent.getStringExtra("artisteID");
-
         preparePlayer();
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -262,8 +261,10 @@ public class MusicService extends Service {
     public int getMusicDuration() {
         return player.getDuration();
     }
+    int musicPosition = 0;
 
     public void pauseMusic(){
+        musicPosition = player.getCurrentPosition();
         player.pause();
     }
 

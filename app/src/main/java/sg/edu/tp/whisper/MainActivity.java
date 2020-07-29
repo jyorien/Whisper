@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -89,8 +91,12 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
-                startActivity(intent);
+                if (isServiceRunning(MusicService.class))  {
+                    Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
+                    startActivity(intent); }
+                else {
+                    Toast.makeText(MainActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -229,6 +235,17 @@ boolean doublePress = false;
                 doublePress=false;
             }
         }, 2000);
+    }
+
+    // check if service is running
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
