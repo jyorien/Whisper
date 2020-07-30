@@ -151,6 +151,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         } else {
             pauseMusic();
         }
+        
     }
 
 
