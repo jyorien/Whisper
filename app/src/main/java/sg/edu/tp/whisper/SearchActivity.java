@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +41,27 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         getSupportActionBar().setTitle("Search");
         fab = findViewById(R.id.fab);
+        fab.hide();
         setAdapter();
+
+        if (isServiceRunning(MusicService.class)) {
+            fab.show();
+        }
+        else {
+            fab.hide();
+        }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isServiceRunning(MusicService.class))  {
+                    Intent intent = new Intent(SearchActivity.this, MusicPlayerActivity.class);
+                    startActivity(intent); }
+                else {
+                    Toast.makeText(SearchActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
 
@@ -122,8 +144,7 @@ public class SearchActivity extends AppCompatActivity {
         listener = new TracksAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
-
+                Intent intent = new Intent(getApplicationContext(), MusicService.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songList", filteredList);
                 intent.putExtras(bundle);
@@ -133,11 +154,25 @@ public class SearchActivity extends AppCompatActivity {
                 intent.putExtra("coverArt",filteredList.get(position).getImageIcon());
                 intent.putExtra("fileLink", filteredList.get(position).getFileLink());
                 intent.putExtra("songId",filteredList.get(position).getId());
+                startService(intent);
 
-                startActivity(intent);
+                if (!fab.isShown()) {
+                    fab.show();
+                }
 
             }
         };
+    }
+
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     boolean doublePress = false;

@@ -54,15 +54,21 @@ public class LibraryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Library");
         prepareLibrarySongs();
         fab = findViewById(R.id.fab);
+        if (isServiceRunning(MusicService.class)) {
+            fab.show();
+        }
+        else {
+            fab.hide();
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isServiceRunning(MusicService.class))  {
                     Intent intent = new Intent(LibraryActivity.this, MusicPlayerActivity.class);
-                    startActivity(intent); }
-                else {
-                    Toast.makeText(LibraryActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
-                }
+                    intent.putExtra("isLibraryActivity",isLibraryActivity);
+                    startActivity(intent);
+                    finish();
+
             }
         });
 
@@ -121,8 +127,7 @@ public class LibraryActivity extends AppCompatActivity {
         listener = new TracksAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
-
+                Intent intent = new Intent(getApplicationContext(), MusicService.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songList", songList);
                 intent.putExtras(bundle);
@@ -132,11 +137,11 @@ public class LibraryActivity extends AppCompatActivity {
                 intent.putExtra("coverArt",songList.get(position).getImageIcon());
                 intent.putExtra("fileLink", songList.get(position).getFileLink());
                 intent.putExtra("songId",songList.get(position).getId());
-                intent.putExtra("isLibraryActivity", isLibraryActivity);
+                startService(intent);
 
-
-                startActivity(intent);
-                finish();
+                if (!fab.isShown()) {
+                    fab.show();
+                }
 
             }
         };

@@ -56,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Welcome home, " + name + "!");
         setContentView(R.layout.activity_main);
         fab = findViewById(R.id.fab);
+        if (isServiceRunning(MusicService.class)) {
+            fab.show();
+        }
+        else {
+            fab.hide();
+        }
 
 
         setAdapter();
@@ -161,6 +167,10 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("songId",songList.get(position).getId());
                 startService(intent);
 
+                if (!fab.isShown()) {
+                    fab.show();
+                }
+
 
 
                 /*Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
@@ -191,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
 
                 startActivity(intent);
+                finish();
 
             }
         };

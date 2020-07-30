@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -18,6 +22,9 @@ public class ArtisteSongsActivity extends AppCompatActivity {
     private RecyclerView trackList;
     private TracksAdapter.RecyclerViewClickListener listener;
 
+    FloatingActionButton fab;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +32,26 @@ public class ArtisteSongsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         retrieveData();
         getSupportActionBar().setTitle(songList.get(0).getArtiste());
+        fab = findViewById(R.id.fab);
+        if (isServiceRunning(MusicService.class)) {
+            fab.show();
+        }
+        else {
+            fab.hide();
+        }
         setAdapter();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isServiceRunning(MusicService.class))  {
+                    Intent intent = new Intent(ArtisteSongsActivity.this, MusicPlayerActivity.class);
+                    startActivity(intent); }
+                else {
+                    Toast.makeText(ArtisteSongsActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void retrieveData() {
@@ -51,8 +77,7 @@ public class ArtisteSongsActivity extends AppCompatActivity {
         listener = new TracksAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
-
+                Intent intent = new Intent(getApplicationContext(), MusicService.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("songList", songList);
                 intent.putExtras(bundle);
@@ -62,8 +87,12 @@ public class ArtisteSongsActivity extends AppCompatActivity {
                 intent.putExtra("coverArt",songList.get(position).getImageIcon());
                 intent.putExtra("fileLink", songList.get(position).getFileLink());
                 intent.putExtra("songId",songList.get(position).getId());
+                startService(intent);
 
-                startActivity(intent);
+                if (!fab.isShown()) {
+                    fab.show();
+                }
+
 
             }
         };
@@ -71,10 +100,21 @@ public class ArtisteSongsActivity extends AppCompatActivity {
 
     // for the back button in the title bar
     public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent = new Intent(ArtisteSongsActivity.this, MainActivity.class);
+        startActivity(intent);
         finish();
         return true;
     }
 
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     boolean doublePress = false;
     // double tap to exit
     @Override
