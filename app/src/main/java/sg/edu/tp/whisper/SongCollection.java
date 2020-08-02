@@ -147,7 +147,7 @@ public class SongCollection {
                 R.drawable.endlessly);
 
         Song temporaryBliss = new Song("C1002", "Temporary Bliss", "The Cab",
-                "097c7b735ceb410943cbd507a6e1dfda272fd8a8?cid=2afe87a64b0042dabf51f37318616965",
+                "59be2d048b18f99e77386abef03cad952be16aa3?cid=2afe87a64b0042dabf51f37318616965",
                 R.drawable.endlessly);
 
         Song animal = new Song("C1003", "Animal", "The Cab",

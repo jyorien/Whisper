@@ -23,42 +23,55 @@ public class ArtisteSongsActivity extends AppCompatActivity {
     private TracksAdapter.RecyclerViewClickListener listener;
 
     FloatingActionButton fab;
-
-
+    boolean doublePress = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artiste_songs);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setFab();
         retrieveData();
+        setAdapter();
         getSupportActionBar().setTitle(songList.get(0).getArtiste());
+    }
+    @Override
+    public void onBackPressed() {
+        // double tap to exit
+        if (doublePress) {
+            super.onBackPressed();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
+    }
+
+    private void setFab() {
+        // initialise the floating action button
         fab = findViewById(R.id.fab);
         if (isServiceRunning(MusicService.class)) {
             fab.show();
-        }
-        else {
+        } else {
             fab.hide();
         }
-        setAdapter();
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isServiceRunning(MusicService.class))  {
+                if (isServiceRunning(MusicService.class)) {
                     Intent intent = new Intent(ArtisteSongsActivity.this, MusicPlayerActivity.class);
-                    startActivity(intent); }
-                else {
+                    startActivity(intent);
+                } else {
                     Toast.makeText(ArtisteSongsActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    private void retrieveData() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            songList = (ArrayList<Song>) extras.getSerializable("songList");
-        }
     }
 
     private void setAdapter() {
@@ -92,10 +105,15 @@ public class ArtisteSongsActivity extends AppCompatActivity {
                 if (!fab.isShown()) {
                     fab.show();
                 }
-
-
             }
         };
+    }
+
+    private void retrieveData() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            songList = (ArrayList<Song>) extras.getSerializable("songList");
+        }
     }
 
     // for the back button in the title bar
@@ -114,25 +132,6 @@ public class ArtisteSongsActivity extends AppCompatActivity {
             }
         }
         return false;
-    }
-    boolean doublePress = false;
-    // double tap to exit
-    @Override
-    public void onBackPressed() {
-        if (doublePress) {
-            super.onBackPressed();
-            return;
-        }
-        doublePress = true;
-        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
-        // change back to false after 2 seconds
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doublePress=false;
-            }
-        }, 2000);
     }
 
 }

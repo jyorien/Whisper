@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.Viewholder> {
+    private RecyclerViewClickListener listener;
+    private ArrayList<Song> songList;
+
     TracksAdapter(ArrayList<Song> songList, RecyclerViewClickListener listener) {
         this.songList = songList;
         this.listener = listener;
     }
-    private RecyclerViewClickListener listener;
-
-    private ArrayList<Song> songList;
 
     @NonNull
     @Override
@@ -45,21 +45,19 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.Viewholder
         private TextView title;
         private TextView artiste;
 
-        public Viewholder (@NonNull View itemView) {
+        Viewholder(@NonNull View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.imageView);
             title = itemView.findViewById(R.id.songTitle);
             artiste = itemView.findViewById(R.id.artisteName);
             itemView.setOnClickListener(this);
-
         }
 
         private void setData(int imageResource, String songTitle, String artisteName ) {
             imageView.setImageResource(imageResource);
             title.setText(songTitle);
             artiste.setText(artisteName);
-
         }
 
         @Override
@@ -67,9 +65,11 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.Viewholder
             listener.onClick(itemView, getAdapterPosition());
         }
     }
+
     public interface RecyclerViewClickListener{
         void onClick(View v, int position);
     }
+
     public void filterList(ArrayList<Song> songList){
         this.songList = songList;
         notifyDataSetChanged();

@@ -17,10 +17,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ResetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
-    private FirebaseUser user;
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
     ProgressBar progressBar;
     EditText resetEmail;
+    boolean doublePress = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +38,26 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         findViewById(R.id.btnLoginPage).setOnClickListener(this);
 
     }
+    @Override
+    // double tap to exit
+    public void onBackPressed() {
+        if (doublePress) {
+            finishAffinity();
+            return;
+        }
+        doublePress = true;
+        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
+        // change back to false after 2 seconds
+        new Handler().postDelayed(new Runnable() {
 
+            @Override
+            public void run() {
+                doublePress=false;
+            }
+        }, 2000);
+    }
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.btnLoginPage:
                 finish();
@@ -62,28 +79,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
                 //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
-
             }
         });
-    }
-
-    boolean doublePress = false;
-    // double tap to exit
-    @Override
-    public void onBackPressed() {
-        if (doublePress) {
-            finishAffinity();
-            return;
-        }
-        doublePress = true;
-        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
-        // change back to false after 2 seconds
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doublePress=false;
-            }
-        }, 2000);
     }
 }

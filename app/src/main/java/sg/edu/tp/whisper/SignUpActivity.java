@@ -21,121 +21,30 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    private FirebaseUser user;
-    private FirebaseAuth mAuth;
+    FirebaseUser user;
+    FirebaseAuth mAuth;
     ProgressBar progressBar;
     EditText newEmail, newPassword, newPasswordConfirm;
-
+    boolean doublePress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
         getSupportActionBar().setTitle("Sign Up");
 
+        mAuth = FirebaseAuth.getInstance();
         newEmail = findViewById(R.id.newEmail);
         newPassword = findViewById(R.id.newPassword);
         newPasswordConfirm = findViewById(R.id.newPasswordConfirm);
         progressBar = findViewById(R.id.progressBar);
 
-        mAuth = FirebaseAuth.getInstance();
-
         findViewById(R.id.btnSignUp).setOnClickListener(this);
         findViewById(R.id.btnLoginPage).setOnClickListener(this);
-
     }
-
-    private void registerUser() {
-        String email = newEmail.getText().toString().trim();
-        String password = newPassword.getText().toString().trim();
-        String passwordConfirm = newPasswordConfirm.getText().toString().trim();
-
-        if (email.isEmpty()) {
-            newEmail.setError("Email is required");
-            newEmail.requestFocus();
-            return;
-        }
-
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            newEmail.setError("Please enter a valid email address.");
-            newEmail.requestFocus();
-            return;
-        }
-
-        if (password.isEmpty()) {
-            newPassword.setError("Password is required");
-            newPassword.requestFocus();
-            return;
-        }
-
-        if(password.length() < 6 ) {
-            newPassword.setError("Minimum length of password is 6.");
-            newPassword.requestFocus();
-            return;
-        }
-
-        if(!password.equals(passwordConfirm)) {
-            newPassword.getText().clear();
-            newPasswordConfirm.getText().clear();
-            newPasswordConfirm.setError("Passwords do not match!");
-            newPassword.setError("Passwords do not match!");
-
-
-        }
-
-        else {
-
-            progressBar.setVisibility(View.VISIBLE);
-
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    progressBar.setVisibility(View.GONE);
-                    if (task.isSuccessful()) {
-                        user = mAuth.getCurrentUser();
-                        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(SignUpActivity.this,LoginActivity.class );
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-
-                            }
-                        });
-
-                    }
-                    else if (task.getException() instanceof FirebaseAuthUserCollisionException){
-                        Toast.makeText(getApplicationContext(), "You are already registered!", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-            });
-
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnLoginPage:
-                finish();
-                break;
-            case R.id.btnSignUp:
-                registerUser();
-
-                break;
-
-    }
-}
-    boolean doublePress = false;
-    // double tap to exit
     @Override
     public void onBackPressed() {
+        // double tap to exit
         if (doublePress) {
             finishAffinity();
             return;
@@ -151,6 +60,80 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         }, 2000);
     }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnLoginPage:
+                finish();
+                break;
+            case R.id.btnSignUp:
+                registerUser();
 
+                break;
 
+        }
+    }
+
+    private void registerUser() {
+        String email = newEmail.getText().toString().trim();
+        String password = newPassword.getText().toString().trim();
+        String passwordConfirm = newPasswordConfirm.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            newEmail.setError("Email is required");
+            newEmail.requestFocus();
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            newEmail.setError("Please enter a valid email address.");
+            newEmail.requestFocus();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            newPassword.setError("Password is required");
+            newPassword.requestFocus();
+            return;
+        }
+
+        if (password.length() < 6 ) {
+            newPassword.setError("Minimum length of password is 6.");
+            newPassword.requestFocus();
+            return;
+        }
+
+        if (!password.equals(passwordConfirm)) {
+            newPassword.getText().clear();
+            newPasswordConfirm.getText().clear();
+            newPasswordConfirm.setError("Passwords do not match!");
+            newPassword.setError("Passwords do not match!");
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) { progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    user = mAuth.getCurrentUser();
+                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(SignUpActivity.this,LoginActivity.class );
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                }
+                else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                    Toast.makeText(getApplicationContext(), "You are already registered!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

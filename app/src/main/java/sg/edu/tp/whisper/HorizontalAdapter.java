@@ -69,10 +69,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         String artiste = songList.get(position).getArtiste();
         holder.setData(resource, title, artiste);
         if(showSongTitle) {
-            title = "";
             holder.setData(resource, title, artiste);
         }
         else {
+            title = "";
             holder.setData(resource, title, artiste);
         }
 

@@ -20,8 +20,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     EditText username;
-
-
+    boolean doublePress = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,49 +30,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         username = findViewById(R.id.username);
 
-
         findViewById(R.id.btnLogOut).setOnClickListener(this);
         findViewById(R.id.btnUpdate).setOnClickListener(this);
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnLogOut:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
-                finish();
-                break;
-
-            case R.id.btnUpdate:
-                updateProfile();
-        }
-
-    }
-
-    private void updateProfile() {
-        String updatedName = username.getText().toString().trim();
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(updatedName).build();
-        user.updateProfile(profileUpdates);
-        //username.getText().clear();
-        Toast.makeText(getApplicationContext(), "Username updated to " + updatedName + "!",Toast.LENGTH_SHORT).show();
-
-    }
-    // for the back button in the title bar
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-
-        return true;
-    }
-
-    boolean doublePress = false;
-    // double tap to exit
     @Override
     public void onBackPressed() {
+        // double tap to exit
         if (doublePress) {
             super.onBackPressed();
             return;
@@ -89,6 +52,33 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }, 2000);
     }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnLogOut:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                finish();
+                break;
 
+            case R.id.btnUpdate:
+                updateProfile();
+        }
+    }
 
+    private void updateProfile() {
+        String updatedName = username.getText().toString().trim();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(updatedName).build();
+        user.updateProfile(profileUpdates);
+        Toast.makeText(getApplicationContext(), "Username updated to " + updatedName + "!",Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        // for the back button in the title bar
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        return true;
+    }
 }
