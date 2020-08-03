@@ -12,12 +12,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class LibraryActivity extends AppCompatActivity {
 
@@ -36,8 +40,10 @@ public class LibraryActivity extends AppCompatActivity {
 
     private ArrayList<Song> songList = new ArrayList<>();
     private Boolean isLibraryActivity = true;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference dbRef = database.getReference();
+    DatabaseReference userRef = dbRef.child(user.getUid());
 
     TracksAdapter adapter;
     private TracksAdapter.RecyclerViewClickListener listener;
@@ -55,6 +61,42 @@ public class LibraryActivity extends AppCompatActivity {
         setAdapter();
         prepareLibrarySongs();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        // Display the settings button in the toolbar
+        getMenuInflater().inflate(R.menu.delete, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        // On-click listener for settings button
+        switch(item.getItemId()){
+            case R.id.delete:   //this item has your app icon
+                dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Iterator<Song> iterator = songList.iterator();
+                        while (iterator.hasNext()) {
+                            iterator.next();
+                            iterator.remove();
+                        }
+                        userRef.removeValue();
+                        adapter.filterList(songList);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                return true;
+            default: return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         // double tap to exit
@@ -87,6 +129,7 @@ public class LibraryActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isServiceRunning(MusicService.class)) {
                     Intent intent = new Intent(LibraryActivity.this, MusicPlayerActivity.class);
+                    intent.putExtra("isLibraryActivity", isLibraryActivity);
                     startActivity(intent);
                 } else {
                     Toast.makeText(LibraryActivity.this, "Nothing is being played!", Toast.LENGTH_SHORT).show();
@@ -164,7 +207,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void prepareLibrarySongs() {
-        dbRef.addValueEventListener(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again

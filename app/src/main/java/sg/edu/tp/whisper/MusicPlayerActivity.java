@@ -18,6 +18,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,7 +64,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     Boolean isAdded = false;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef,secRef;
+    DatabaseReference songRef, dbRef, userRef;
+    FirebaseUser user;
     Song tempSong = null;
     ImageButton addToLibraryBtn;
 
@@ -78,6 +81,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekBar);
         txtCurrentTime = findViewById(R.id.txtCurrentTime);
         playPauseBtn = findViewById(R.id.playPauseButton);
+        repeatButton = findViewById(R.id.repeatButton);
+        shuffleButton = findViewById(R.id.shuffleButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
         songName = findViewById(R.id.songName);
         artiste = findViewById(R.id.artiste);
@@ -89,7 +94,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
 
         startMusicService();
-        displaySong(songTitle, artisteName, img);
+        displaySong();
 
         updateSeekBar();
         seekBar.setOnSeekBarChangeListener(seekBarOnSeekChangeListener);
@@ -113,10 +118,19 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }, 2000);
     }
 
-    private void displaySong(String title, String artisteName, int image) {
+    private void displaySong() {
+        if (mService != null) {
+        artisteName = mService.getArtiste();
+        songTitle = mService.getSongTitle();
+        img = mService.getCoverArt();
+        songList = mService.getSongList();
+        songId = mService.getSongId();
+        fileLink = mService.getFileLink();
+        }
+
         artiste.setText(artisteName);
-        songName.setText(title);
-        coverArt.setImageResource(image);
+        songName.setText(songTitle);
+        coverArt.setImageResource(img);
     }
 
     private void updateSeekBar() {
@@ -165,10 +179,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     mService.playNext(); }
             }
             if (progress == 0) {
-                artisteName = mService.getArtiste();
-                songTitle = mService.getSongTitle();
-                img = mService.getCoverArt();
-                displaySong(songTitle, artisteName, img);
+                displaySong();
             }
         }
     };
@@ -205,13 +216,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             mService = binder.getService();
             mBound = true;
 
-            artisteName = mService.getArtiste();
-            songTitle = mService.getSongTitle();
-            img = mService.getCoverArt();
-            songList = mService.getSongList();
-            songId = mService.getSongId();
-            fileLink = mService.getFileLink();
-            displaySong(songTitle, artisteName, img);
+            displaySong();
             seekBar.setMax(mService.getMusicDuration());
             updateSeekBar();
             Toast.makeText(MusicPlayerActivity.this, "bound", Toast.LENGTH_SHORT).show();
@@ -251,10 +256,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
     public void nextBtn(View view) {
         if (isShuffle == true) {
             mService.shuffleSong();
-            artisteName = mService.getArtiste();
-            songTitle = mService.getSongTitle();
-            img = mService.getCoverArt();
-            displaySong(songTitle, artisteName, img);
+            displaySong();
+
             playPauseBtn.setBackgroundResource(R.drawable.fpause);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
             isLooping = false;
@@ -262,10 +265,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
         else{
             mService.playNext();
-            artisteName = mService.getArtiste();
-            songTitle = mService.getSongTitle();
-            img = mService.getCoverArt();
-            displaySong(songTitle, artisteName, img);
+
+            displaySong();
             playPauseBtn.setBackgroundResource(R.drawable.fpause);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
             isLooping = false;
@@ -273,19 +274,24 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void prevBtn(View view) {
+        playPauseBtn.setBackgroundResource(R.drawable.fpause);
         if (isShuffle == true) {
             mService.shuffleSong();
-            playPauseBtn.setBackgroundResource(R.drawable.fpause);
+
+            displaySong();
+
         }
         else {
             mService.playPrev();
-            playPauseBtn.setBackgroundResource(R.drawable.fpause);
+            artisteName = mService.getArtiste();
+            songTitle = mService.getSongTitle();
+            img = mService.getCoverArt();
+            songId = mService.getSongId();
+            fileLink = mService.getFileLink();
         }
     }
 
     public void repeatSongBtn(View view) {
-        repeatButton = findViewById(R.id.repeatButton);
-        shuffleButton = findViewById(R.id.shuffleButton);
 
         if (isLooping == false) {
             isLooping = true;
@@ -326,23 +332,27 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 break;
             }
         }
-        myRef = database.getReference(tempSong.getId()); // append child node in database
-        secRef = database.getReference(); // reference the whole database
 
-        secRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        dbRef = database.getReference(); // reference the whole database
+        userRef = database.getReference(userId);
+        songRef = userRef.child(tempSong.getId()); // append child node in database
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 if (dataSnapshot.hasChild(songId)) {
                     isAdded = true;
-                    myRef.removeValue();
+                    songRef.removeValue();
                     Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
                 }
                 if (isAdded == false) {
                     String image = Integer.toString(tempSong.getImageIcon());
                     String addSong = tempSong.getId() + "," + tempSong.getTitle() + "," + tempSong.getArtiste() + "," + tempSong.getFileLink() + "," + image;
-                    myRef.setValue(addSong);
+                    songRef.setValue(addSong);
                     Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
                     // Read from the database
             /*myRef.addValueEventListener(new ValueEventListener() {
