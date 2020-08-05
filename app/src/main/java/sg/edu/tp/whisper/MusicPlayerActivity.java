@@ -224,6 +224,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 seekBar.setProgress(mService.getMusicPosition());
                 pauseMusic();
             }
+
+            if (mService.getLoopState() == true) {
+                isLooping = true;
+                repeatButton.setBackgroundResource(R.drawable.crepeat1);
+            }
         }
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
@@ -261,6 +266,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             playPauseBtn.setBackgroundResource(R.drawable.fpause);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
             isLooping = false;
+            mService.loopSong(false);
 
         }
         else{
@@ -270,6 +276,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             playPauseBtn.setBackgroundResource(R.drawable.fpause);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
             isLooping = false;
+            mService.loopSong(false);
         }
     }
 
@@ -313,6 +320,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         if (isShuffle == false) {
             isShuffle = true;
             isLooping = false;
+            mService.loopSong(false);
             shuffleButton.setBackgroundResource(R.drawable.cshuffle2);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
         }
@@ -387,12 +395,14 @@ public class MusicPlayerActivity extends AppCompatActivity {
         // for the back button in the title bar
         if (isLibraryActivity == true) {
             unbindService(mConnection);
+            mBound = false;
             Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
             startActivity(intent);
             finish();
         }
         else {
             unbindService(mConnection);
+            mBound = false;
             finish();
         }
         return true;

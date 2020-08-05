@@ -33,15 +33,15 @@ public class MusicService extends Service {
 
     private final IBinder binder = new LocalBinder();
 
-    private static MediaPlayer player = new MediaPlayer();
+    private static MediaPlayer player;
 
     public MusicService() {
     }
 
     @Override
     public void onCreate() {
+        player = new MediaPlayer();
         super.onCreate();
-        //Toast.makeText(this, "Service created", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -97,7 +97,8 @@ public class MusicService extends Service {
     }
 
     public void preparePlayer() {
-        player.reset();
+            player.reset();
+
         try {
             player.setAudioAttributes(
                     new AudioAttributes
@@ -212,16 +213,21 @@ public class MusicService extends Service {
         if (songList == null) {
             return song;
         }
-        randInt = random.nextInt(songList.size());
-        song = songList.get(randInt);
-        return song;
+        else {
+            randInt = random.nextInt(songList.size());
+            song = songList.get(randInt);
+            return song;
+        }
     }
 
     public void loopSong(boolean bool) {
-        if (bool)
+        if (bool == true)
             player.setLooping(true);
         else
             player.setLooping(false);
+    }
+    public boolean getLoopState() {
+        return player.isLooping();
     }
 
     public void playMusic(){
@@ -263,5 +269,4 @@ public class MusicService extends Service {
     public ArrayList<Song> getSongList() {
         return songList;
     }
-
 }

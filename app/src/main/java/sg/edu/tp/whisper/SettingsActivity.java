@@ -52,12 +52,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }, 2000);
     }
+MusicService mService;
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnLogOut:
                 FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(SettingsActivity.this, MusicService.class);
+                stopService(intent);
+
                 startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+
                 finish();
                 break;
 

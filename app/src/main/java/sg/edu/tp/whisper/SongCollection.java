@@ -21,8 +21,6 @@ public class SongCollection {
         prepareAllSongs();
     }
 
-    public static ArrayList<Song> librarySongs = new ArrayList<>();
-
     private ArrayList<Song> topSongs = new ArrayList<>();
 
     ArrayList<Song> getTopSongs() {
