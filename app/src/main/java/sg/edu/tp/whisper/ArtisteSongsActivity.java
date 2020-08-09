@@ -24,6 +24,7 @@ public class ArtisteSongsActivity extends AppCompatActivity {
 
     FloatingActionButton fab;
     boolean doublePress = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

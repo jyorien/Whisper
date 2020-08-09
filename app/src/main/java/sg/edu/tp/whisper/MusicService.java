@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -27,7 +29,10 @@ public class MusicService extends Service {
     private String songId = "";
     private String songTitle = "";
     private String fileLink = "";
-    ArrayList<Song> songList = new ArrayList<>();
+    ArrayList<Song> songList;
+    ArrayList<Song> shuffledList;
+
+    boolean isShuffle = false;
 
     int musicPosition = 0;
 
@@ -92,6 +97,10 @@ public class MusicService extends Service {
     public class LocalBinder extends Binder {
         MusicService getService() {
             // Return this instance of LocalService so clients can call public methods
+            if (isShuffle == true) {
+                // shuffle the CURRENT list if rebound to another song
+                shuffleSongs();
+            }
             return MusicService.this;
         }
     }
@@ -132,19 +141,42 @@ public class MusicService extends Service {
 
     public Song getNextSong(String currentSongId) {
         Song song = null;
-        if (songList == null) {
-            return song;
-        }
-
-        for(int i = 0; i < songList.size(); i++) {
-            if (songList.get(songList.size() - 1).getId().equals(currentSongId)) {
-                song = songList.get(0);
-                break;
+        if (isShuffle == true) {
+            if (shuffledList == null) {
+                return song;
             }
-            String tempSongId = songList.get(i).getId();
-            if (tempSongId.equals(currentSongId)) {
-                song = songList.get(i+1);
-                break;
+
+            for(int i = 0; i < shuffledList.size(); i++) {
+                // if last song in list, play the first song
+                if (shuffledList.get(shuffledList.size() - 1).getId().equals(currentSongId)) {
+                    song = shuffledList.get(0);
+                    break;
+                }
+                String tempSongId = shuffledList.get(i).getId();
+                if (tempSongId.equals(currentSongId)) {
+                    // find the current song in shuffled arraylist and return the next
+                    song = shuffledList.get(i+1);
+                    break;
+                }
+            }
+        }
+        else {
+            if (songList == null) {
+                return song;
+            }
+
+            for(int i = 0; i < songList.size(); i++) {
+                // if last song in list, play the first song
+                if (songList.get(songList.size() - 1).getId().equals(currentSongId)) {
+                    song = songList.get(0);
+                    break;
+                }
+                String tempSongId = songList.get(i).getId();
+                if (tempSongId.equals(currentSongId)) {
+                    // find the current song in arraylist and return the next
+                    song = songList.get(i+1);
+                    break;
+                }
             }
         }
         return song;
@@ -170,54 +202,52 @@ public class MusicService extends Service {
 
     public Song getPrevSong(String currentSongId) {
         Song song = null;
-        if (songList == null) {
-            return song;
-        }
-
-        for(int i = 0; i < songList.size(); i++) {
-            if (songList.get(0).getId().equals(currentSongId)) {
-                song = songList.get(songList.size() - 1);
-                break;
+        if (isShuffle == false) {
+            if (songList == null) {
+                return song;
             }
-            String tempSongId = songList.get(i).getId();
-            if (tempSongId.equals(currentSongId)) {
-                song = songList.get(i-1);
-                break;
+
+            for (int i = 0; i < songList.size(); i++) {
+                // if first song in list, play the last song
+                if (songList.get(0).getId().equals(currentSongId)) {
+                    song = songList.get(songList.size() - 1);
+                    break;
+                }
+                String tempSongId = songList.get(i).getId();
+                // find the current song in arraylist and return the previous
+                if (tempSongId.equals(currentSongId)) {
+                    song = songList.get(i-1);
+                    break;
+                }
+            }
+        }
+        else if (isShuffle == true) {
+            if (shuffledList == null) {
+                return song;
+            }
+
+            for (int i = 0; i < shuffledList.size(); i++) {
+                if (shuffledList.get(0).getId().equals(currentSongId)) {
+                    song = shuffledList.get(shuffledList.size() - 1);
+                    break;
+                }
+                String tempSongId = shuffledList.get(i).getId();
+                if (tempSongId.equals(currentSongId)) {
+                    song = shuffledList.get(i - 1);
+                    break;
+                }
             }
         }
         return song;
     }
 
-    public void shuffleSong() {
-        Song shuffledSong = getShuffleNextSong();
-        if (shuffledSong != null) {
-            songId = shuffledSong.getId();
-            songTitle = shuffledSong.getTitle();
-            artisteName = shuffledSong.getArtiste();
-            url = "https://p.scdn.co/mp3-preview/" + shuffledSong.getFileLink();
-            img = shuffledSong.getImageIcon();
-        }
-        preparePlayer();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                player.start();
-            }
-        });
+    public void shuffleSongs() {
+        isShuffle = true;
+        shuffledList = songList;
+        Collections.shuffle(shuffledList);
     }
-
-    public Song getShuffleNextSong() {
-        int randInt;
-        Random random = new Random();
-        Song song = null;
-        if (songList == null) {
-            return song;
-        }
-        else {
-            randInt = random.nextInt(songList.size());
-            song = songList.get(randInt);
-            return song;
-        }
+    public void unshuffleSongs() {
+        isShuffle = false;
     }
 
     public void loopSong(boolean bool) {
@@ -225,9 +255,6 @@ public class MusicService extends Service {
             player.setLooping(true);
         else
             player.setLooping(false);
-    }
-    public boolean getLoopState() {
-        return player.isLooping();
     }
 
     public void playMusic(){
@@ -237,7 +264,7 @@ public class MusicService extends Service {
         musicPosition = player.getCurrentPosition();
         player.pause();
     }
-
+    // methods to get MediaPlayer values or control
     public boolean isMusicPlaying() {
         return player.isPlaying();
     }
@@ -250,8 +277,15 @@ public class MusicService extends Service {
     public int getMusicDuration() {
         return player.getDuration();
     }
+    public boolean getLoopState() {
+        return player.isLooping();
+    }
+    public boolean getShuffleState() {
+        return isShuffle;
+    }
 
-    int getCoverArt() {
+    // methods to get Song object values
+    public int getCoverArt() {
         return img;
     }
     public String getArtiste() {

@@ -32,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class LibraryActivity extends AppCompatActivity {
 
@@ -72,17 +71,13 @@ public class LibraryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         // On-click listener for settings button
         switch(item.getItemId()){
-            case R.id.delete:   //this item has your app icon
+            case R.id.delete:
                 dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Iterator<Song> iterator = songList.iterator();
-                        while (iterator.hasNext()) {
-                            iterator.next();
-                            iterator.remove();
-                        }
-                        userRef.removeValue();
-                        adapter.filterList(songList);
+                        songList.clear(); // clear the arraylist
+                        userRef.removeValue(); // clear the node in the database
+                        adapter.filterList(songList); // update the recyclerview
 
                     }
 
@@ -91,7 +86,6 @@ public class LibraryActivity extends AppCompatActivity {
 
                     }
                 });
-
                 return true;
             default: return super.onOptionsItemSelected(item);
         }

@@ -172,8 +172,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 if (isLooping == true) {
                     // let the song loop itself
                 }
-                else if (isShuffle == true)
-                    mService.shuffleSong();
+                //else if (isShuffle == true)
+                  //  mService.shuffleSongs();
                 else {
                     // if loop and shuffle off, go next song
                     mService.playNext(); }
@@ -229,6 +229,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 isLooping = true;
                 repeatButton.setBackgroundResource(R.drawable.crepeat1);
             }
+            if (mService.getShuffleState() == true) {
+                isShuffle = true;
+                shuffleButton.setBackgroundResource(R.drawable.cshuffle2);
+            }
         }
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
@@ -259,8 +263,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void nextBtn(View view) {
-        if (isShuffle == true) {
-            mService.shuffleSong();
+        /*if (isShuffle == true) {
+            mService.shuffleSongs();
             displaySong();
 
             playPauseBtn.setBackgroundResource(R.drawable.fpause);
@@ -268,8 +272,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
             isLooping = false;
             mService.loopSong(false);
 
-        }
-        else{
+        }*/
+        //else{
             mService.playNext();
 
             displaySong();
@@ -277,25 +281,25 @@ public class MusicPlayerActivity extends AppCompatActivity {
             repeatButton.setBackgroundResource(R.drawable.crepeat);
             isLooping = false;
             mService.loopSong(false);
-        }
+        //}
     }
 
     public void prevBtn(View view) {
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
-        if (isShuffle == true) {
-            mService.shuffleSong();
+        /*if (isShuffle == true) {
+            mService.shuffleSongs();
 
             displaySong();
 
-        }
-        else {
+        }*/
+        //else {
             mService.playPrev();
             artisteName = mService.getArtiste();
             songTitle = mService.getSongTitle();
             img = mService.getCoverArt();
             songId = mService.getSongId();
             fileLink = mService.getFileLink();
-        }
+        //}
     }
 
     public void repeatSongBtn(View view) {
@@ -304,6 +308,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             isLooping = true;
             mService.loopSong(true);
             isShuffle = false;
+            mService.unshuffleSongs();
             shuffleButton.setBackgroundResource(R.drawable.cshuffle);
             repeatButton.setBackgroundResource(R.drawable.crepeat1);
         }
@@ -320,12 +325,14 @@ public class MusicPlayerActivity extends AppCompatActivity {
         if (isShuffle == false) {
             isShuffle = true;
             isLooping = false;
+            mService.shuffleSongs();
             mService.loopSong(false);
             shuffleButton.setBackgroundResource(R.drawable.cshuffle2);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
         }
         else if (isShuffle == true) {
             isShuffle = false;
+            mService.unshuffleSongs();
             shuffleButton.setBackgroundResource(R.drawable.cshuffle);
         }
     }

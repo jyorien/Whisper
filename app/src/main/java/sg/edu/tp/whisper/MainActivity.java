@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             name = "user";
         }
         getSupportActionBar().setTitle("Welcome home, " + name + "!");
-
     }
 
     @Override
