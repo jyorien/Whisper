@@ -30,7 +30,7 @@ public class MusicService extends Service {
     private String songTitle = "";
     private String fileLink = "";
     ArrayList<Song> songList;
-    ArrayList<Song> shuffledList;
+    ArrayList<Song> shuffledList = new ArrayList<>();
 
     boolean isShuffle = false;
 
@@ -99,6 +99,7 @@ public class MusicService extends Service {
             // Return this instance of LocalService so clients can call public methods
             if (isShuffle == true) {
                 // shuffle the CURRENT list if rebound to another song
+                Toast.makeText(MusicService.this, "shuffled", Toast.LENGTH_SHORT).show();
                 shuffleSongs();
             }
             return MusicService.this;
@@ -243,7 +244,8 @@ public class MusicService extends Service {
 
     public void shuffleSongs() {
         isShuffle = true;
-        shuffledList = songList;
+        shuffledList.clear();
+        shuffledList.addAll(songList);
         Collections.shuffle(shuffledList);
     }
     public void unshuffleSongs() {
