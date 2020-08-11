@@ -122,8 +122,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         public void onComplete(@NonNull Task<Void> task) {
                             Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(SignUpActivity.this,LoginActivity.class );
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            finish();
                         }
                     });
                 }

@@ -117,8 +117,8 @@ public class ArtisteSongsActivity extends AppCompatActivity {
         }
     }
 
-    // for the back button in the title bar
     public boolean onOptionsItemSelected(MenuItem item){
+        // for the back button in the title bar
         Intent intent = new Intent(ArtisteSongsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

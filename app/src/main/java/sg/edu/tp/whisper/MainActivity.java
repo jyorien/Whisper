@@ -150,14 +150,14 @@ public class MainActivity extends AppCompatActivity {
         topTracks = findViewById(R.id.topTracks);
 
         // bind songList to recyclerview
-        songAdapter = new HorizontalAdapter(this, songList, true, songListener);
+        songAdapter = new HorizontalAdapter(songList, true, songListener);
         songLayoutManager = new LinearLayoutManager(this);
         songLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         topTracks.setAdapter(songAdapter);
         topTracks.setLayoutManager(songLayoutManager);
 
         // bind artisteList to recyclerview
-        artisteAdapter = new HorizontalAdapter(this, artisteList, false, artisteListener);
+        artisteAdapter = new HorizontalAdapter( artisteList, false, artisteListener);
         artisteLayoutManager = new LinearLayoutManager(this);
         artisteLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         topArtistes.setAdapter(artisteAdapter);

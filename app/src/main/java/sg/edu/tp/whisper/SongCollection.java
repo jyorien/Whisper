@@ -1,11 +1,5 @@
 package sg.edu.tp.whisper;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 public class SongCollection {
@@ -40,7 +34,7 @@ public class SongCollection {
                 "1cf8d48884a0ce9cbf21bba281a0a8e2b43f0bb2?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.letting_go);
 
-        Song theScientist = new Song("P1007", "The Scientist", "Coldplay",
+        Song theScientist = new Song("P1001", "The Scientist", "Coldplay",
                 "95cb9df1b056d759920b5e85ad7f9aff0a390671?cid=2afe87a64b0042dabf51f37318616965",
                  R.drawable.the_scientist);
 
@@ -94,7 +88,6 @@ public class SongCollection {
 
     private ArrayList<Song> edSheeranSongs = new ArrayList<>();
 
-    ArrayList<Song> getEdSheeranSongs() {return edSheeranSongs; }
     private void prepareEdSheeranSongList() {
         Song photograph = new Song("E1001", "Photograph", "Ed Sheeran",
                 "097c7b735ceb410943cbd507a6e1dfda272fd8a8?cid=2afe87a64b0042dabf51f37318616965",
@@ -137,7 +130,6 @@ public class SongCollection {
 
     private ArrayList<Song> theCabSongs = new ArrayList<>();
 
-    ArrayList<Song> getTheCabSongs() {return theCabSongs; }
     private void prepareTheCabSongs() {
 
         Song endlessly = new Song("C1001", "Endlessly", "The Cab",
@@ -187,7 +179,6 @@ public class SongCollection {
 
     private ArrayList<Song> oneOkRockSongs = new ArrayList<>();
 
-    ArrayList<Song> getOneOkRockSongs() {return theCabSongs; }
     private void prepareOneOkRockSongs() {
         Song lettingGo = new Song("O1001", "Letting Go", "One OK Rock",
                 "1cf8d48884a0ce9cbf21bba281a0a8e2b43f0bb2?cid=2afe87a64b0042dabf51f37318616965",
@@ -231,7 +222,6 @@ public class SongCollection {
 
     private ArrayList<Song> coldPlaySongs = new ArrayList<>();
 
-    ArrayList<Song> getColdPlaySongs() {return theCabSongs; }
     private void prepareColdPlaySongs() {
         Song theScientist = new Song("P1001", "The Scientist", "Coldplay",
                 "95cb9df1b056d759920b5e85ad7f9aff0a390671?cid=2afe87a64b0042dabf51f37318616965",

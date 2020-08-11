@@ -1,6 +1,5 @@
 package sg.edu.tp.whisper;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +14,14 @@ import java.util.ArrayList;
 public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.ViewHolder> {
 
     private final boolean showSongTitle;
-    private Context context;
     private ArrayList<Song> songList;
     private RecyclerViewClickListener listener;
 
-    public HorizontalAdapter(Context context, ArrayList<Song> songList, boolean showSongTitle, RecyclerViewClickListener listener) {
-        this.context = context;
+    public HorizontalAdapter(ArrayList<Song> songList, boolean showSongTitle, RecyclerViewClickListener listener) {
         this.songList = songList;
         this.showSongTitle = showSongTitle;
         this.listener = listener;
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView imageView;
@@ -47,18 +43,16 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
             title.setText(songTitle);
             artiste.setText(artisteName);
         }
-
         @Override
         public void onClick(View v) {
             listener.onClick(itemView, getAdapterPosition());
         }
-
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_list_item,parent,false );
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item,parent,false );
         return new ViewHolder(view);
     }
 

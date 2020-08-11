@@ -15,10 +15,9 @@ import android.widget.Toast;
 
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+
 
 
 public class MusicService extends Service {
