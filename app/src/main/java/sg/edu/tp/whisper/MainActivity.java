@@ -20,11 +20,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UsernameDialog.UsernameDialogListener {
     RecyclerView topTracks, topArtistes;
     HorizontalAdapter songAdapter, artisteAdapter;
     private HorizontalAdapter.RecyclerViewClickListener songListener;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private SongCollection songCollection = new SongCollection();
     ArrayList<Song> songList = songCollection.getTopSongs();
     ArrayList<Song> artisteList = songCollection.getTopArtistes();
+
+    UsernameDialog usernameDialog = new UsernameDialog();
 
     FirebaseUser user;
     String name;
@@ -50,11 +53,16 @@ public class MainActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user.getDisplayName() != null) {
             name = user.getDisplayName();
+            getSupportActionBar().setTitle("Welcome home, " + name + "!");
         } else {
-            name = "user";
+            usernameDialog.show(getSupportFragmentManager(), "Username Dialog");
+            getSupportActionBar().setTitle("Welcome home!");
         }
-        getSupportActionBar().setTitle("Welcome home, " + name + "!");
+
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -213,5 +221,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void sendUsername(String username) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(username).build();
+        user.updateProfile(profileUpdates);
+
+        getSupportActionBar().setTitle("Welcome home, " + username + "!");
+
     }
 }

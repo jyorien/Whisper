@@ -58,8 +58,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     TextView artiste;
     ImageView coverArt;
 
-    boolean doublePress = false;
-
     private int musicPosition = 0; // to store position of the song when paused
 
     Boolean isAdded = false;
@@ -76,7 +74,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         seekBar = findViewById(R.id.seekBar);
         txtCurrentTime = findViewById(R.id.txtCurrentTime);
@@ -201,7 +198,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             displaySong();
             seekBar.setMax(mService.getMusicDuration());
             updateSeekBar();
-            Toast.makeText(MusicPlayerActivity.this, "bound", Toast.LENGTH_SHORT).show();
+
             if (mService.isMusicPlaying() == false) {
                 seekBar.setProgress(mService.getMusicPosition());
                 pauseMusic();
@@ -380,20 +377,18 @@ public class MusicPlayerActivity extends AppCompatActivity {
         });
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){
-        // for the back button in the title bar
+    @Override
+    public void onBackPressed() {
         if (isLibraryActivity == true) {
-            unbindService(mConnection);
-            mBound = false;
             Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
             startActivity(intent);
             finish();
         }
         else {
-            unbindService(mConnection);
-            mBound = false;
             finish();
         }
-        return true;
+        unbindService(mConnection);
+        mBound = false;
+
     }
 }

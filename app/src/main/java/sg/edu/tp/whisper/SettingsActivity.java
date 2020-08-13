@@ -55,7 +55,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }, 2000);
     }
-MusicService mService;
     @Override
     public void onClick(View v) {
         switch (v.getId()){
