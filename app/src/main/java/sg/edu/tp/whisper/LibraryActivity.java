@@ -3,6 +3,7 @@ package sg.edu.tp.whisper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class LibraryActivity extends AppCompatActivity {
+public class LibraryActivity extends AppCompatActivity implements DeleteDialog.DeleteDialogListener {
 
     private RecyclerView trackList;
 
@@ -43,6 +44,7 @@ public class LibraryActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference dbRef = database.getReference();
     DatabaseReference userRef = dbRef.child(user.getUid());
+    DeleteDialog deleteDialog = new DeleteDialog();
 
     TracksAdapter adapter;
     private TracksAdapter.RecyclerViewClickListener listener;
@@ -63,7 +65,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        // Display the settings button in the toolbar
+        // Display the delete button in the toolbar
         getMenuInflater().inflate(R.menu.delete, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -72,7 +74,8 @@ public class LibraryActivity extends AppCompatActivity {
         // On-click listener for settings button
         switch(item.getItemId()){
             case R.id.delete:
-                dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                deleteDialog.show(getSupportFragmentManager(), "Delete Dialog");
+                /*dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         songList.clear(); // clear the arraylist
@@ -85,7 +88,7 @@ public class LibraryActivity extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                });*/
                 return true;
             default: return super.onOptionsItemSelected(item);
         }
@@ -95,7 +98,10 @@ public class LibraryActivity extends AppCompatActivity {
     public void onBackPressed() {
         // double tap to exit
         if (doublePress) {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             return;
         }
         doublePress = true;
@@ -250,5 +256,29 @@ public class LibraryActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+
+    @Override
+    public void onDialogPositiveClick() {
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                songList.clear(); // clear the arraylist
+                userRef.removeValue(); // clear the node in the database
+                adapter.filterList(songList); // update the recyclerview
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onDialogNegativeClick() {
+
     }
 }

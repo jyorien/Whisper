@@ -79,7 +79,7 @@ public class MusicService extends Service {
     }
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "Service destroyed", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Service destroyed", Toast.LENGTH_LONG).show();
         player.stop();
         player.release();
         player = null;
@@ -89,7 +89,7 @@ public class MusicService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        Toast.makeText(this, "bound", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "bound", Toast.LENGTH_SHORT).show();
         return binder;
     }
 

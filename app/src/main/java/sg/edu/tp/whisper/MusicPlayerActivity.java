@@ -99,24 +99,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
         updateSeekBar();
         seekBar.setOnSeekBarChangeListener(seekBarOnSeekChangeListener);
     }
-    @Override
-    public void onBackPressed() {
-        // double tap to exit
-        if (doublePress) {
-            super.onBackPressed();
-            return;
-        }
-        doublePress = true;
-        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
-        // change back to false after 2 seconds
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doublePress=false;
-            }
-        }, 2000);
-    }
 
     private void displaySong() {
         if (mService != null) {

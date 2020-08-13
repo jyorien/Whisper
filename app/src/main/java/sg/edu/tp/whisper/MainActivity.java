@@ -78,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         // double tap to exit
         if (doublePress) {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             return;
         }
         doublePress = true;
@@ -197,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
 
                 startActivity(intent);
-                finish();
             }
         };
     }

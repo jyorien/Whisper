@@ -42,24 +42,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.btnSignUp).setOnClickListener(this);
         findViewById(R.id.btnLoginPage).setOnClickListener(this);
     }
-    @Override
-    public void onBackPressed() {
-        // double tap to exit
-        if (doublePress) {
-            finishAffinity();
-            return;
-        }
-        doublePress = true;
-        Toast.makeText(this, "Tap again to EXIT", Toast.LENGTH_SHORT).show();
-        // change back to false after 2 seconds
-        new Handler().postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-                doublePress=false;
-            }
-        }, 2000);
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
