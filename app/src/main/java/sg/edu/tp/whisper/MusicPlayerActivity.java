@@ -52,6 +52,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private String songId = "";
     private String songTitle = "";
     private String fileLink = "";
+    private String userId = "";
     Boolean isLibraryActivity = false;
 
     TextView songName;
@@ -74,6 +75,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         seekBar = findViewById(R.id.seekBar);
         txtCurrentTime = findViewById(R.id.txtCurrentTime);
@@ -81,9 +83,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
         repeatButton = findViewById(R.id.repeatButton);
         shuffleButton = findViewById(R.id.shuffleButton);
         playPauseBtn.setBackgroundResource(R.drawable.fpause);
+        addToLibraryBtn  = findViewById(R.id.addToLibraryButton);
         songName = findViewById(R.id.songName);
         artiste = findViewById(R.id.artiste);
         coverArt = findViewById(R.id.imageView);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
+        dbRef = database.getReference(); // reference the whole database
+        userRef = database.getReference(userId);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -110,6 +118,28 @@ public class MusicPlayerActivity extends AppCompatActivity {
         artiste.setText(artisteName);
         songName.setText(songTitle);
         coverArt.setImageResource(img);
+    }
+
+    private void checkSongInDb() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                if (dataSnapshot.hasChild(songId)) {
+                    isAdded = true;
+                    addToLibraryBtn.setBackgroundResource(R.drawable.remove_button);
+                }
+                else {
+                    isAdded = false;
+                    addToLibraryBtn.setBackgroundResource(R.drawable.add_button);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+            }
+        });
     }
 
     private void updateSeekBar() {
@@ -198,6 +228,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             displaySong();
             seekBar.setMax(mService.getMusicDuration());
             updateSeekBar();
+            checkSongInDb();
 
             if (mService.isMusicPlaying() == false) {
                 seekBar.setProgress(mService.getMusicPosition());
@@ -216,7 +247,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             mBound = false;
-            Toast.makeText(MusicPlayerActivity.this, "unbound", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -242,43 +272,25 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void nextBtn(View view) {
-        /*if (isShuffle == true) {
-            mService.shuffleSongs();
-            displaySong();
 
-            playPauseBtn.setBackgroundResource(R.drawable.fpause);
-            repeatButton.setBackgroundResource(R.drawable.crepeat);
-            isLooping = false;
-            mService.loopSong(false);
-
-        }*/
-        //else{
             mService.playNext();
-
             displaySong();
+            checkSongInDb();
             playPauseBtn.setBackgroundResource(R.drawable.fpause);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
             isLooping = false;
             mService.loopSong(false);
-        //}
     }
 
     public void prevBtn(View view) {
-        playPauseBtn.setBackgroundResource(R.drawable.fpause);
-        /*if (isShuffle == true) {
-            mService.shuffleSongs();
 
-            displaySong();
-
-        }*/
-        //else {
             mService.playPrev();
-            artisteName = mService.getArtiste();
-            songTitle = mService.getSongTitle();
-            img = mService.getCoverArt();
-            songId = mService.getSongId();
-            fileLink = mService.getFileLink();
-        //}
+            displaySong();
+            checkSongInDb();
+            playPauseBtn.setBackgroundResource(R.drawable.fpause);
+            repeatButton.setBackgroundResource(R.drawable.crepeat);
+            isLooping = false;
+            mService.loopSong(false);
     }
 
     public void repeatSongBtn(View view) {
@@ -291,7 +303,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             shuffleButton.setBackgroundResource(R.drawable.cshuffle);
             repeatButton.setBackgroundResource(R.drawable.crepeat1);
         }
-        else if(isLooping == true){
+        else if (isLooping == true){
             isLooping = false;
             mService.loopSong(false);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
@@ -317,21 +329,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void addToLibraryBtn(View view) {
-        addToLibraryBtn  = findViewById(R.id.addToLibraryButton);
-        //get the current song object
-        for(int i = 0; i < songList.size(); i++) {
-            String tempSongId = songList.get(i).getId();
-            if (tempSongId.equals(songId)) {
-                tempSong = songList.get(i);
-                break;
-            }
-        }
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = user.getUid();
-        dbRef = database.getReference(); // reference the whole database
-        userRef = database.getReference(userId);
-        songRef = userRef.child(tempSong.getId()); // append child node in database
+        songRef = userRef.child(songId); // append child node in database
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -339,36 +338,24 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 if (dataSnapshot.hasChild(songId)) {
-                    isAdded = true;
                     songRef.removeValue();
                     Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
+                    isAdded = false;
                 }
-                if (isAdded == false) {
-                    String image = Integer.toString(tempSong.getImageIcon());
-                    String addSong = tempSong.getId() + "," + tempSong.getTitle() + "," + tempSong.getArtiste() + "," + tempSong.getFileLink() + "," + image;
+                else {
+                    String image = Integer.toString(img);
+                    String addSong = songId + "," + songTitle + "," + artisteName + "," + fileLink + "," + image;
                     songRef.setValue(addSong);
                     Toast.makeText(getApplicationContext(), "Added " + songTitle + " to Library", Toast.LENGTH_SHORT).show();
-                    // Read from the database
-            /*myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    //String value = dataSnapshot.getValue(String.class);
-                    //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
-                    //Log.d(TAG, "Value is: " + value);
+                    isAdded = true;
                 }
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                }
-            });*/
-                }
                 if (isAdded == true) {
+                    addToLibraryBtn.setBackgroundResource(R.drawable.remove_button);
+                }
+                else {
                     addToLibraryBtn.setBackgroundResource(R.drawable.add_button);
                 }
-                isAdded = false;
             }
             @Override
             public void onCancelled(DatabaseError error) {
@@ -379,6 +366,16 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        startPreviousActivity();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        // for the back button in the title bar
+        startPreviousActivity();
+        return true;
+    }
+
+    private void startPreviousActivity() {
         if (isLibraryActivity == true) {
             Intent intent = new Intent(MusicPlayerActivity.this, LibraryActivity.class);
             startActivity(intent);
@@ -389,6 +386,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
         unbindService(mConnection);
         mBound = false;
-
     }
+
 }

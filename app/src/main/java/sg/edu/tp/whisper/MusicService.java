@@ -79,7 +79,6 @@ public class MusicService extends Service {
     }
     @Override
     public void onDestroy() {
-        //Toast.makeText(this, "Service destroyed", Toast.LENGTH_LONG).show();
         player.stop();
         player.release();
         player = null;
@@ -89,7 +88,6 @@ public class MusicService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        //Toast.makeText(this, "bound", Toast.LENGTH_SHORT).show();
         return binder;
     }
 
@@ -98,7 +96,6 @@ public class MusicService extends Service {
             // Return this instance of LocalService so clients can call public methods
             if (isShuffle == true) {
                 // shuffle the CURRENT list if rebound to another song
-                Toast.makeText(MusicService.this, "shuffled", Toast.LENGTH_SHORT).show();
                 shuffleSongs();
             }
             return MusicService.this;
@@ -127,6 +124,7 @@ public class MusicService extends Service {
             songId = nextSong.getId();
             songTitle = nextSong.getTitle();
             artisteName = nextSong.getArtiste();
+            fileLink = nextSong.getFileLink();
             url = "https://p.scdn.co/mp3-preview/" + nextSong.getFileLink();
             img = nextSong.getImageIcon();
         }
@@ -188,6 +186,7 @@ public class MusicService extends Service {
             songId = prevSong.getId();
             songTitle = prevSong.getTitle();
             artisteName = prevSong.getArtiste();
+            fileLink = prevSong.getFileLink();
             url = "https://p.scdn.co/mp3-preview/" + prevSong.getFileLink();
             img = prevSong.getImageIcon();
         }
