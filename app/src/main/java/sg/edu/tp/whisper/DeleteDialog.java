@@ -36,8 +36,8 @@ public class DeleteDialog extends AppCompatDialogFragment {
     DeleteDialogListener listener;
 
     public interface DeleteDialogListener {
-        public void onDialogPositiveClick();
-        public void onDialogNegativeClick();
+        void onDialogPositiveClick();
+        void onDialogNegativeClick();
     }
 
     @Override

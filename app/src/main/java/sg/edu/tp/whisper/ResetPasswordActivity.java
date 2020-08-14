@@ -20,7 +20,6 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     EditText resetEmail;
-    boolean doublePress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,6 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(), "Please check your email!", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ResetPasswordActivity.this,LoginActivity.class );
-                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }

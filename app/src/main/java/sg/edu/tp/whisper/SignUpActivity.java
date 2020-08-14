@@ -25,7 +25,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     EditText newEmail, newPassword, newPasswordConfirm;
-    boolean doublePress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +50,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btnSignUp:
                 registerUser();
-
                 break;
-
         }
     }
 

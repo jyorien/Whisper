@@ -28,8 +28,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements UsernameDialog.UsernameDialogListener {
     RecyclerView topTracks, topArtistes;
     HorizontalAdapter songAdapter, artisteAdapter;
-    private HorizontalAdapter.RecyclerViewClickListener songListener;
-    private HorizontalAdapter.RecyclerViewClickListener artisteListener;
+    HorizontalAdapter.RecyclerViewClickListener songListener, artisteListener;
 
     private SongCollection songCollection = new SongCollection();
     ArrayList<Song> songList = songCollection.getTopSongs();
@@ -58,11 +57,7 @@ public class MainActivity extends AppCompatActivity implements UsernameDialog.Us
             usernameDialog.show(getSupportFragmentManager(), "Username Dialog");
             getSupportActionBar().setTitle("Welcome home!");
         }
-
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -198,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements UsernameDialog.Us
                 }
             }
         };
+
         artisteListener = new HorizontalAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
@@ -228,8 +224,6 @@ public class MainActivity extends AppCompatActivity implements UsernameDialog.Us
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(username).build();
         user.updateProfile(profileUpdates);
-
         getSupportActionBar().setTitle("Welcome home, " + username + "!");
-
     }
 }

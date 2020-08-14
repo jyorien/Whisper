@@ -52,7 +52,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private String songId = "";
     private String songTitle = "";
     private String fileLink = "";
-    private String userId = "";
     Boolean isLibraryActivity = false;
 
     TextView songName;
@@ -65,7 +64,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference songRef, dbRef, userRef;
     FirebaseUser user;
-    Song tempSong = null;
     ImageButton addToLibraryBtn;
 
     MusicService mService;
@@ -79,17 +77,18 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         seekBar = findViewById(R.id.seekBar);
         txtCurrentTime = findViewById(R.id.txtCurrentTime);
+
         playPauseBtn = findViewById(R.id.playPauseButton);
         repeatButton = findViewById(R.id.repeatButton);
         shuffleButton = findViewById(R.id.shuffleButton);
-        playPauseBtn.setBackgroundResource(R.drawable.fpause);
         addToLibraryBtn  = findViewById(R.id.addToLibraryButton);
+        playPauseBtn.setBackgroundResource(R.drawable.fpause);
         songName = findViewById(R.id.songName);
         artiste = findViewById(R.id.artiste);
         coverArt = findViewById(R.id.imageView);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
+        String userId = user.getUid();
         dbRef = database.getReference(); // reference the whole database
         userRef = database.getReference(userId);
 
@@ -121,6 +120,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     private void checkSongInDb() {
+        // check if the current song is inside the database.
+        // changes state of addToLibraryBtn
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -178,14 +179,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 seekBar.setProgress(progress);
             }
             if (progress == seekBar.getMax()) {
-                if (isLooping == true) {
-                    // let the song loop itself
+
+                if (isLooping == false) {
+                    mService.playNext();
                 }
-                //else if (isShuffle == true)
-                  //  mService.shuffleSongs();
-                else {
-                    // if loop and shuffle off, go next song
-                    mService.playNext(); }
+
             }
             if (progress == 0) {
                 displaySong();
@@ -220,8 +218,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            // gets called when the connection to MusicService is established
+            // called when the connection to MusicService is established
             MusicService.LocalBinder binder = (MusicService.LocalBinder) iBinder;
+            // get the service from the LocalBinder class
             mService = binder.getService();
             mBound = true;
 
@@ -234,7 +233,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 seekBar.setProgress(mService.getMusicPosition());
                 pauseMusic();
             }
-
             if (mService.getLoopState() == true) {
                 isLooping = true;
                 repeatButton.setBackgroundResource(R.drawable.crepeat1);
@@ -272,7 +270,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void nextBtn(View view) {
-
             mService.playNext();
             displaySong();
             checkSongInDb();
@@ -283,7 +280,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void prevBtn(View view) {
-
             mService.playPrev();
             displaySong();
             checkSongInDb();
@@ -294,7 +290,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void repeatSongBtn(View view) {
-
         if (isLooping == false) {
             isLooping = true;
             mService.loopSong(true);
@@ -303,7 +298,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             shuffleButton.setBackgroundResource(R.drawable.cshuffle);
             repeatButton.setBackgroundResource(R.drawable.crepeat1);
         }
-        else if (isLooping == true){
+        else {
             isLooping = false;
             mService.loopSong(false);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
@@ -321,7 +316,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             shuffleButton.setBackgroundResource(R.drawable.cshuffle2);
             repeatButton.setBackgroundResource(R.drawable.crepeat);
         }
-        else if (isShuffle == true) {
+        else {
             isShuffle = false;
             mService.unshuffleSongs();
             shuffleButton.setBackgroundResource(R.drawable.cshuffle);
@@ -329,7 +324,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     public void addToLibraryBtn(View view) {
-
         songRef = userRef.child(songId); // append child node in database
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -338,11 +332,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 if (dataSnapshot.hasChild(songId)) {
+                    // remove the node with the song
                     songRef.removeValue();
                     Toast.makeText(getApplicationContext(), "Removed " + songTitle + " from Library", Toast.LENGTH_SHORT).show();
                     isAdded = false;
                 }
                 else {
+                    // add a new child node to store song
                     String image = Integer.toString(img);
                     String addSong = songId + "," + songTitle + "," + artisteName + "," + fileLink + "," + image;
                     songRef.setValue(addSong);

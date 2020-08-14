@@ -72,23 +72,9 @@ public class LibraryActivity extends AppCompatActivity implements DeleteDialog.D
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         // On-click listener for settings button
-        switch(item.getItemId()){
+        switch (item.getItemId()){
             case R.id.delete:
                 deleteDialog.show(getSupportFragmentManager(), "Delete Dialog");
-                /*dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        songList.clear(); // clear the arraylist
-                        userRef.removeValue(); // clear the node in the database
-                        adapter.filterList(songList); // update the recyclerview
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });*/
                 return true;
             default: return super.onOptionsItemSelected(item);
         }
@@ -201,7 +187,6 @@ public class LibraryActivity extends AppCompatActivity implements DeleteDialog.D
                 if (!fab.isShown()) {
                     fab.show();
                 }
-
             }
         };
     }
@@ -258,7 +243,6 @@ public class LibraryActivity extends AppCompatActivity implements DeleteDialog.D
         return false;
     }
 
-
     @Override
     public void onDialogPositiveClick() {
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -267,7 +251,6 @@ public class LibraryActivity extends AppCompatActivity implements DeleteDialog.D
                 songList.clear(); // clear the arraylist
                 userRef.removeValue(); // clear the node in the database
                 adapter.filterList(songList); // update the recyclerview
-
             }
 
             @Override

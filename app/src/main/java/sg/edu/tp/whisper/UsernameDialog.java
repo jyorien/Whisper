@@ -58,7 +58,7 @@ public class UsernameDialog extends AppCompatDialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (username.getText().length() ==0) {
+                if (username.getText().length() == 0) {
                     positiveButton.setEnabled(false);
                 }
                 else {
@@ -75,11 +75,10 @@ public class UsernameDialog extends AppCompatDialogFragment {
 
         try {
             listener = (UsernameDialogListener) context;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "Must implement UsernameDialogListener");
         }
-
-
     }
 
     public interface UsernameDialogListener {

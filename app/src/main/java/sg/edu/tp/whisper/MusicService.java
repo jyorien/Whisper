@@ -39,9 +39,6 @@ public class MusicService extends Service {
 
     private static MediaPlayer player;
 
-    public MusicService() {
-    }
-
     @Override
     public void onCreate() {
         player = new MediaPlayer();
@@ -51,7 +48,6 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //Toast.makeText(this, "Service started", Toast.LENGTH_LONG).show();
-        //return super.onStartCommand(intent, flags, startId);
         fileLink = intent.getStringExtra("fileLink");
         url = "https://p.scdn.co/mp3-preview/" + fileLink;
         img = intent.getIntExtra("coverArt",0);
@@ -250,8 +246,8 @@ public class MusicService extends Service {
         isShuffle = false;
     }
 
-    public void loopSong(boolean bool) {
-        if (bool == true)
+    public void loopSong(boolean isLoop) {
+        if (isLoop == true)
             player.setLooping(true);
         else
             player.setLooping(false);
@@ -264,6 +260,7 @@ public class MusicService extends Service {
         musicPosition = player.getCurrentPosition();
         player.pause();
     }
+
     // methods to get MediaPlayer values or control
     public boolean isMusicPlaying() {
         return player.isPlaying();
